@@ -92,7 +92,7 @@ public class Bot
                  tempStream = new UnitAction(UnitActionType.ATTACK, currUnit.id(), enemyDiamondPos);
              }
              else if(!currUnit.hasDiamond() && enemyDiamondPos != null) {
-                 tempStream = new UnitAction(UnitActionType.ATTACK,
+                 tempStream = new UnitAction(UnitActionType.MOVE,
                          currUnit.id(),
                          Utils.whereToDrop(enemyDiamondPos));
              }
