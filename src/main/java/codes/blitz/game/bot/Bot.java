@@ -78,24 +78,24 @@ public class Bot
             }
 
             List<Position> nearestDiamonds = Utils.findNearestDiamonds();
-             if (!currUnit.hasDiamond() && !(nearestDiamonds.size() <= Integer.parseInt(currUnit.id())-1)) {
+            if (!currUnit.hasDiamond() && !(nearestDiamonds.size() <= Integer.parseInt(currUnit.id())-1)) {
                 tempStream = new UnitAction(UnitActionType.MOVE,
-                    currUnit.id(),
-                    nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1));
-                 allActions.add(tempStream);
+                        currUnit.id(),
+                        nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1));
+                allActions.add(tempStream);
                 continue;
 
-             }
+            }
 
-             Position enemyDiamondPos = Utils.findEnemyPlayerWithDiamond(currUnit.position());
-             if(!currUnit.hasDiamond() && enemyDiamondPos != null && Utils.getDistance(currUnit.position(), enemyDiamondPos) == 1) {
-                 tempStream = new UnitAction(UnitActionType.ATTACK, currUnit.id(), enemyDiamondPos);
-             }
-             else if(!currUnit.hasDiamond() && enemyDiamondPos != null) {
-                 tempStream = new UnitAction(UnitActionType.MOVE,
-                         currUnit.id(),
-                         Utils.whereToDrop(enemyDiamondPos));
-             }
+            Position enemyDiamondPos = Utils.findEnemyPlayerWithDiamond(currUnit.position());
+            if(!currUnit.hasDiamond() && enemyDiamondPos != null && Utils.getDistance(currUnit.position(), enemyDiamondPos) == 1) {
+                tempStream = new UnitAction(UnitActionType.ATTACK, currUnit.id(), enemyDiamondPos);
+            }
+            else if(!currUnit.hasDiamond() && enemyDiamondPos != null) {
+                tempStream = new UnitAction(UnitActionType.MOVE,
+                        currUnit.id(),
+                        Utils.whereToDrop(enemyDiamondPos));
+            }
 
              /*Position enemyPos = Utils.findIfEnemyAdjacent(currUnit.id());
             if (!currUnit.hasDiamond() && enemyPos != null && !spawnTiles.contains(enemyPos) && !spawnTiles.contains(currUnit))
