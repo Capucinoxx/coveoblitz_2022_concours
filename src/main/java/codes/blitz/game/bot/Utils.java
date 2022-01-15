@@ -405,8 +405,8 @@ public class Utils {
      */
     public static boolean isMovable(Position target, Position currPosition)
     {
-        if(Bot.EnemyMap.keySet().contains(target) || Bot.wallTiles.contains(target) ||
-                Bot.PlayerMap.keySet().contains(target) ||
+        if(Bot.EnemyMap.containsKey(target) || Bot.wallTiles.contains(target) ||
+                Bot.PlayerMap.containsValue(target) ||
                 (Bot.spawnTiles.contains(target) && !Bot.spawnTiles.contains(currPosition)) ||
                 target.x() < 0 || target.y() < 0 || target.x() >= Bot.m_message.map().horizontalSize()
                 || target.y() >= Bot.m_message.map().verticalSize())
