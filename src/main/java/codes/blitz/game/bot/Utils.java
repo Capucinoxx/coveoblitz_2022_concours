@@ -256,8 +256,7 @@ public class Utils {
 
     public static ArrayList<Position> findNearestDiamonds() {
         ArrayList<Position> nearDiamondPos = new ArrayList<Position>();
-        List<Position> allyPos = findAllyPosition();
-        for (Position p : allyPos) {
+        for (Position p : Bot.PlayerMap.values()) {
             int bestCost = Integer.MAX_VALUE;
             Position bestPos = new Position(0, 0);
             for (Position dpos : Bot.DiamondMap.keySet()) {
@@ -299,9 +298,12 @@ public class Utils {
                     diamondtoRemovePos = dPos;
                 }
             }
-            usedSpawn.add(tileToRemovePos);
-            removedDiamonds.put(diamondtoRemovePos, true);
-            spawnPos.add(bestPos);
+            if(Bot.spawnTiles.contains(bestPos))
+            {
+                spawnPos.add(bestPos);
+                usedSpawn.add(tileToRemovePos);
+                removedDiamonds.put(diamondtoRemovePos, true);
+            }
         }
         return spawnPos;
     }
