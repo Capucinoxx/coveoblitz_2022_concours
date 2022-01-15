@@ -143,4 +143,55 @@ public class Utils {
         }
         return false;
     }
+
+    public boolean positionInList(Position position, List<Position> positions) {
+        for(Position pos : positions) {
+            if (position.x() == pos.x() && position.y() == pos.y()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void canVine(Position playerPosition) {
+        // Check if not in a spawn tile
+        if(!positionInList(playerPosition, spawnTiles)) {
+
+        }
+
+
+    }
+
+    public List<Position> checkSameLine(Position playerPosition) {
+        List<Position> playersPosition = findPlayersPosition();
+        List<Position> positions = new ArrayList<>();
+
+        playersPosition.forEach((position -> {
+            if(!(position.x() == playerPosition.x() && position.y() == playerPosition.y())) { // not my position
+                if(playerPosition.x() == position.x()) {
+                    int pos_min = (Math.min(playerPosition.y(), position.y()));
+                    int pos_max = (Math.max(playerPosition.y(), position.y()));
+
+                    for(int i = pos_min; i <= pos_max; i++) {
+                        if(!positionInList(new Position(position.x(), i), blankTile)) {
+                            break;
+                        }
+                    }
+                    positions.add(position);
+                } else if (playerPosition.y() == position.y()){
+                    int pos_min = (Math.min(playerPosition.x(), position.x()));
+                    int pos_max = (Math.max(playerPosition.x(), position.x()));
+
+                    for(int i = pos_min; i <= pos_max; i++) {
+                        if(!positionInList(new Position(i, position.x()), blankTile)) {
+                            break;
+                        }
+                    }
+                    positions.add(position);
+                }
+            }
+        }));
+
+        return positions;
+    }
 }
