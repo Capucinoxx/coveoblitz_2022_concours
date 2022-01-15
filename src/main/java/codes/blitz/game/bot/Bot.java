@@ -91,7 +91,7 @@ public class Bot
              if(!currUnit.hasDiamond() && enemyDiamondPos != null && Utils.getDistance(currUnit.position(), enemyDiamondPos) == 1) {
                  tempStream = new UnitAction(UnitActionType.ATTACK, currUnit.id(), enemyDiamondPos);
              }
-             else if(!currUnit.hasDiamond()) {
+             else if(!currUnit.hasDiamond() && enemyDiamondPos != null) {
                  tempStream = new UnitAction(UnitActionType.ATTACK,
                          currUnit.id(),
                          Utils.whereToDrop(enemyDiamondPos));
