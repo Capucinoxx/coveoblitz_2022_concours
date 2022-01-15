@@ -40,4 +40,31 @@ public class Utils {
             }
         });
     }
+
+    public List<Position> findPlayersPosition()
+    {
+        List<Position> positions = new ArrayList<>();
+
+        m_message.teams().forEach((team) -> {
+            team.units().forEach((unit) -> {
+                positions.add(unit.position());
+            });
+        });
+
+        return positions;
+    }
+
+    public List<Position> findAllyPosition() {
+        List<Position> positions = new ArrayList<>();
+
+        m_message.teamsMapById().get(m_message.teamId()).units().forEach((unit) -> {
+            positions.add(unit.position());
+        });
+        return positions;
+    }
+
+    public int getDistance(Position a, Position b) {
+        return Math.abs(a.x() - b.x()) + Math.abs(a.y() - b.y());
+    }
+
 }
