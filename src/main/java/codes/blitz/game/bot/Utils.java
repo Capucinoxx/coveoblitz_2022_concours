@@ -208,7 +208,7 @@ public class Utils {
         {
             coorX--;
         }
-        else
+        else if (source.x() - target.x() < 0)
         {
             coorX++;
         }
@@ -217,7 +217,7 @@ public class Utils {
         {
             coorY--;
         }
-        else
+        else if (source.y() - target.y() < 0)
         {
             coorY++;
         }
