@@ -248,7 +248,7 @@ public class Utils {
         return positions;
     }
 
-    public Boolean findIfEnemyAdjacent(String id)
+    public static Position findIfEnemyAdjacent(String id)
     {
         Boolean canAttack = false;
         Position pos = PlayerMap.get(id);
@@ -256,12 +256,12 @@ public class Utils {
             if((enemyPos.x() == pos.x() + 1 || enemyPos.x() == pos.x() - 1)
             && (enemyPos.y() != pos.y() + 1 || enemyPos.y() != pos.y() - 1))
             {
-               canAttack = true;
+               return enemyPos;
             }
         }
 
 
-        return canAttack;
+        return null;
     }
 
     public static ArrayList<Position> findNearestDiamonds() {
@@ -311,5 +311,22 @@ public class Utils {
             spawnPos.add(bestPos);
         }
         return spawnPos;
+    }
+
+    public static Position chaseEnemy(String id) {
+        Position playerPosition = PlayerMap.get(id);
+        Position minEnemyPos = null;
+        int minDistance = 0;
+        int currentDistance;
+
+        for(Position enemyPos : EnemyMap.keySet()) {
+            currentDistance = getDistance(enemyPos, playerPosition);
+            if(minDistance > currentDistance) {
+                minDistance = currentDistance;
+                minEnemyPos = enemyPos;
+            }
+        }
+
+        return minEnemyPos;
     }
 }

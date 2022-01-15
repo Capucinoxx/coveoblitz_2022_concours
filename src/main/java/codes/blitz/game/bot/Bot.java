@@ -62,11 +62,17 @@ public class Bot
                 continue;
             }
             List<Position> nearestDiamonds = Utils.findNearestDiamonds();
-            if (currUnit.hasSpawned() && !currUnit.hasDiamond() && !(nearestDiamonds.size() <= Integer.parseInt(currUnit.id())-1))
+            Position enemyPos = Utils.findIfEnemyAdjacent(currUnit.id());
+            if (!currUnit.hasDiamond() && enemyPos != null && !Utils.spawnTiles.contains(enemyPos))
             {
-                tempStream = new UnitAction(UnitActionType.MOVE,
+                tempStream = new UnitAction(UnitActionType.ATTACK,
                         currUnit.id(),
-                        nearestDiamonds.get(Integer.parseInt(currUnit.id())-1));
+                        enemyPos);
+            }
+            else if (!currUnit.hasDiamond() && !(nearestDiamonds.size() <= Integer.parseInt(currUnit.id())-1)) {
+            tempStream = new UnitAction(UnitActionType.MOVE,
+                    currUnit.id(),
+                    nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1));
             }
             else if (currUnit.hasDiamond() && gameMessage.tick() == gameMessage.totalTick()-1)
             {
@@ -80,7 +86,7 @@ public class Bot
                                 currUnit.id(),
                             new Position(currUnit.position().x()+1, currUnit.position().y()));
             }
-            else if (currUnit.hasDiamond())
+            else if (currUnit.hasDiamond() && Utils.getSummonLevel(currUnit.id()) != 5)
             {
                 tempStream = new UnitAction(UnitActionType.SUMMON,
                         currUnit.id(),
