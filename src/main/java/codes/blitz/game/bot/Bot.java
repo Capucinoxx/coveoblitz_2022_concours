@@ -17,6 +17,8 @@ import jdk.jshell.execution.Util;
 
 public class Bot
 {
+    public static final Integer taha_fait_vraiment_chier = 5;
+
     public Bot()
     {
         System.out.println("Initializing your super duper mega bot.");
@@ -31,7 +33,9 @@ public class Bot
      */
     public List<UnitAction> getNextActions(GameMessage gameMessage)
     {
-        Utils.CreateDiamondMap();
+        Utils.createDiamondMap();
+        Utils.createUnitMap();
+
         Team myTeam = gameMessage.teamsMapById().get(gameMessage.teamId());
         GameMap map = gameMessage.map();
 

@@ -1,6 +1,7 @@
 package codes.blitz.game.bot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,13 +12,26 @@ public class Utils {
 
     public static GameMessage m_message;
     public static Map<Position, Integer> DiamondMap;
+    public static Map<Position, Boolean> UnitMap;
     public static ArrayList<Position> spawnTiles = new ArrayList<Position>();
     public static ArrayList<Position> wallTiles = new ArrayList<Position>();
     public static ArrayList<Position> blankTile = new ArrayList<Position>();
 
+    public static void createUnitMap() {
+        UnitMap = new HashMap<>();
 
-    public static void CreateDiamondMap()
-    {
+        Map<String, Team> teamsMapID = m_message.teamsMapById();
+        // retrait de notre équipe
+        teamsMapID.remove(m_message.teamId());
+
+
+        teamsMapID.forEach((s, team) -> { team.units().forEach((unit) -> UnitMap.put(unit.position(), true)); });
+
+    }
+
+    public static void createDiamondMap() {
+        DiamondMap = new HashMap<>();
+
         m_message.map().diamonds().forEach((diamond) -> {
             DiamondMap.put(diamond.position(), diamond.points());
         });
@@ -28,20 +42,23 @@ public class Utils {
         m_message = message;
     }
 
-    public void findHeldDiamond() {
-        List<Position> unitsPosition = findUnitsPosition();
+    public ArrayList<Position> findHeldDiamond() {
         ArrayList<Position> hDiamonds = new ArrayList<>();
+
         DiamondMap.forEach((pos, val) -> {
             if (val > 0) {
-                for (Position p : unitsPosition) {
-                    if (p == pos) {
-                        hDiamonds.add(pos);
-                    }
+                if (UnitMap.containsKey(pos)) {
+                    hDiamonds.add(pos);
                 }
             }
         });
+
+        return hDiamonds;
     }
 
+    /**
+     * @deprecated
+     */
     public List<Position> findUnitsPosition() {
         List<Position> positions = new ArrayList<>();
 
@@ -114,5 +131,16 @@ public class Utils {
         }
 
         return best;
+    }
+
+    public boolean isMenacer(Position x) {
+        for (int i = 0; i < Bot.taha_fait_vraiment_chier; i++) {
+            for (int j = 0; j < Bot.taha_fait_vraiment_chier; j++) {
+                if (UnitMap.containsKey(new Position(x.x() + i, x.y() + j))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
