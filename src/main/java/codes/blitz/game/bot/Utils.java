@@ -16,6 +16,9 @@ public class Utils {
     public static ArrayList<Position> spawnTiles = new ArrayList<Position>();
     public static ArrayList<Position> wallTiles = new ArrayList<Position>();
     public static ArrayList<Position> blankTile = new ArrayList<Position>();
+    public static Map<String, Position> playerMap = new HashMap<>();
+    public static Map<String, Position> enemyMap = new HashMap<>();
+
 
     public static void createUnitMap() {
         UnitMap = new HashMap<>();
@@ -71,7 +74,14 @@ public class Utils {
 
         return positions;
     }
+    public static void findPlayers()
+    {
+        m_message.teamsMapById().get(m_message.teamId()).units().forEach((unit) -> {
+            playerMap.put(unit.id(), unit.position());
+        });
 
+    }
+    
     public List<Position> findPlayersPosition()
     {
         List<Position> positions = new ArrayList<>();
@@ -158,8 +168,6 @@ public class Utils {
         if(!positionInList(playerPosition, spawnTiles)) {
 
         }
-
-
     }
 
     public List<Position> checkSameLine(Position playerPosition) {
@@ -193,5 +201,10 @@ public class Utils {
         }));
 
         return positions;
+    }
+
+    public static Position findIfEnemyAdjacent(String id)
+    {
+
     }
 }

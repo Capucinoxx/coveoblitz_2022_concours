@@ -33,6 +33,7 @@ public class Bot
      */
     public List<UnitAction> getNextActions(GameMessage gameMessage)
     {
+        Utils.findPlayers();
         Utils.createDiamondMap();
         Utils.createUnitMap();
 
