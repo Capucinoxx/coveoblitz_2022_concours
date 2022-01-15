@@ -371,26 +371,22 @@ public class Utils {
         Position south = new Position(playerPosition.x(), playerPosition.y()+1);
         Position east = new Position(playerPosition.x()+1, playerPosition.y());
         Position west = new Position(playerPosition.x()-1, playerPosition.y());
-        if (Bot.wallTiles.contains(north) && !Bot.spawnTiles.contains(north) && !Bot.EnemyMap.containsKey(north)
-                && !Bot.PlayerMap.containsValue(north)
+        if (Bot.blankTile.contains(north)
                 && north.x() >= 0 && north.x() < Bot.m_message.map().horizontalSize() &&
                 north.y() >= 0 && north.y() < Bot.m_message.map().verticalSize())
         {
             return north;
-        } else if (!Bot.wallTiles.contains(south) && !Bot.spawnTiles.contains(south) && !Bot.EnemyMap.containsKey(south)
-                && !Bot.PlayerMap.containsValue(south)
+        } else if (Bot.blankTile.contains(south)
                 && south.x() >= 0 && south.x() < Bot.m_message.map().horizontalSize() &&
                 south.y() >= 0 && south.y() < Bot.m_message.map().verticalSize())
         {
             return south;
-        } else if (!Bot.wallTiles.contains(east) && !Bot.spawnTiles.contains(east) && !Bot.EnemyMap.containsKey(east)
-                && !Bot.PlayerMap.containsValue(east)
+        } else if (Bot.blankTile.contains(east)
                 && east.x() >= 0 && east.x() < Bot.m_message.map().horizontalSize() &&
                 east.y() >= 0 && east.y() < Bot.m_message.map().verticalSize())
         {
             return east;
-        } else if (!Bot.wallTiles.contains(west) && !Bot.spawnTiles.contains(west) && !Bot.EnemyMap.containsKey(west)
-                && !Bot.PlayerMap.containsValue(west)
+        } else if (Bot.blankTile.contains(west)
                 && west.x() >= 0 && west.x() < Bot.m_message.map().horizontalSize() &&
                 west.y() >= 0 && west.y() < Bot.m_message.map().verticalSize())
         {
