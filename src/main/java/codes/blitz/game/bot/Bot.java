@@ -85,10 +85,12 @@ public class Bot
                 }
                 continue;
             }
-            Map<String, Position> mapNearestDiamond;
             ArrayList<Position> nearestDiamonds = Utils.findNearestDiamonds();
             Position enemyDiamondPos = Utils.findEnemyPlayerWithDiamond(currUnit.position());
-            if ((!currUnit.hasDiamond() && nearestDiamonds.size() > Integer.parseInt(currUnit.id())-1) ||
+            if(!currUnit.hasDiamond() && enemyDiamondPos != null && Utils.getDistance(currUnit.position(), enemyDiamondPos) == 1 && !spawnTiles.contains(currUnit.position())) {
+                tempStream = new UnitAction(UnitActionType.ATTACK, currUnit.id(), enemyDiamondPos);
+            }
+            else if ((!currUnit.hasDiamond() && nearestDiamonds.size() > Integer.parseInt(currUnit.id())-1) ||
                     (!currUnit.hasDiamond() && enemyDiamondPos != null && Utils.getDistance(currUnit.position(), enemyDiamondPos) > 1)) {
 
                 if(enemyDiamondPos != null && (nearestDiamonds.size() <= Integer.parseInt(currUnit.id()) - 1 || Utils.getDistance(nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1), currUnit.position()) >
@@ -110,9 +112,7 @@ public class Bot
             }
 
 
-            if(!currUnit.hasDiamond() && enemyDiamondPos != null && Utils.getDistance(currUnit.position(), enemyDiamondPos) == 1 && !spawnTiles.contains(currUnit.position())) {
-                tempStream = new UnitAction(UnitActionType.ATTACK, currUnit.id(), enemyDiamondPos);
-            }
+
 
              /*Position enemyPos = Utils.findIfEnemyAdjacent(currUnit.id());
             if (!currUnit.hasDiamond() && enemyPos != null && !spawnTiles.contains(enemyPos) && !spawnTiles.contains(currUnit))
@@ -156,7 +156,7 @@ public class Bot
                 }
             }
             else if (currUnit.hasDiamond() && Utils.getSummonLevel(currUnit.id()) <= 5 &&
-                    m_message.tick()-m_message.totalTick() >  Utils.getSummonLevel(currUnit.id())+1)
+                    m_message.totalTick()-m_message.tick() >  Utils.getSummonLevel(currUnit.id())+1)
             {
                 tempStream = new UnitAction(UnitActionType.SUMMON,
                         currUnit.id(),
