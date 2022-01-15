@@ -11,9 +11,10 @@ import codes.blitz.game.message.game.*;
 public class Utils {
 
     public static GameMessage m_message;
-    public static Map<Position, Integer> DiamondMap;
+
     public static Map<Position, String> EnemyMap;
     public static Map<String, Position> PlayerMap;
+    public static Map<Position, Integer> DiamondMap = new HashMap<>();
     public static ArrayList<Position> spawnTiles = new ArrayList<Position>();
     public static ArrayList<Position> wallTiles = new ArrayList<Position>();
     public static ArrayList<Position> blankTile = new ArrayList<Position>();
@@ -22,7 +23,7 @@ public class Utils {
     public static void createUnitMap() {
         EnemyMap = new HashMap<>();
 
-        Map<String, Team> teamsMapID = m_message.teamsMapById();
+        Map<String, Team> teamsMapID = new HashMap<>(Map.copyOf(m_message.teamsMapById()));
         // retrait de notre équipe
         teamsMapID.remove(m_message.teamId());
 
@@ -35,6 +36,7 @@ public class Utils {
     public static void createPlayerMap() {
         PlayerMap = new HashMap<>();
 
+        System.out.println(m_message.teamsMapById());
         m_message.teamsMapById().get(m_message.teamId()).units().forEach((unit) -> {
             PlayerMap.put(unit.id(), unit.position());
         });
@@ -48,12 +50,12 @@ public class Utils {
         });
     }
 
-    public void SetMap(GameMessage message)
-    {
+    public static void SetMap(GameMessage message) {
         m_message = message;
     }
 
-    public ArrayList<Position> findHeldDiamond() {
+    public static ArrayList<Position> findHeldDiamond() {
+
         ArrayList<Position> hDiamonds = new ArrayList<>();
 
         DiamondMap.forEach((pos, val) -> {
@@ -103,7 +105,7 @@ public class Utils {
         return positions;
     }
 
-    public List<Position> findAllyPosition() {
+    public static List<Position> findAllyPosition() {
         List<Position> positions = new ArrayList<>();
 
         m_message.teamsMapById().get(m_message.teamId()).units().forEach((unit) -> {
@@ -112,15 +114,13 @@ public class Utils {
         return positions;
     }
 
-    public int getDistance(Position a, Position b) {
+    public static int getDistance(Position a, Position b) {
         return Math.abs(a.x() - b.x()) + Math.abs(a.y() - b.y());
     }
 
     public static void SortTile() throws PositionOutOfMapException {
-        for(int i = 0; i < m_message.map().horizontalSize(); i++)
-        {
-            for(int j = 0; j < m_message.map().verticalSize(); j++)
-            {
+        for (int i = 0; i < m_message.map().horizontalSize(); i++) {
+            for (int j = 0; j < m_message.map().verticalSize(); j++) {
                 Position pos = new Position(i, j);
                 TileType type = m_message.map().tileTypeAt(pos);
                 switch (type) {
@@ -163,7 +163,7 @@ public class Utils {
     }
 
     public boolean positionInList(Position position, List<Position> positions) {
-        for(Position pos : positions) {
+        for (Position pos : positions) {
             if (position.x() == pos.x() && position.y() == pos.y()) {
                 return true;
             }
@@ -173,7 +173,7 @@ public class Utils {
 
     public void canVine(Position playerPosition) {
         // Check if not in a spawn tile
-        if(!positionInList(playerPosition, spawnTiles)) {
+        if (!positionInList(playerPosition, spawnTiles)) {
 
         }
     }
@@ -183,23 +183,23 @@ public class Utils {
         List<Position> positions = new ArrayList<>();
 
         playersPosition.forEach((position -> {
-            if(!(position.x() == playerPosition.x() && position.y() == playerPosition.y())) { // not my position
-                if(playerPosition.x() == position.x()) {
+            if (!(position.x() == playerPosition.x() && position.y() == playerPosition.y())) { // not my position
+                if (playerPosition.x() == position.x()) {
                     int pos_min = (Math.min(playerPosition.y(), position.y()));
                     int pos_max = (Math.max(playerPosition.y(), position.y()));
 
-                    for(int i = pos_min; i <= pos_max; i++) {
-                        if(!positionInList(new Position(position.x(), i), blankTile)) {
+                    for (int i = pos_min; i <= pos_max; i++) {
+                        if (!positionInList(new Position(position.x(), i), blankTile)) {
                             break;
                         }
                     }
                     positions.add(position);
-                } else if (playerPosition.y() == position.y()){
+                } else if (playerPosition.y() == position.y()) {
                     int pos_min = (Math.min(playerPosition.x(), position.x()));
                     int pos_max = (Math.max(playerPosition.x(), position.x()));
 
-                    for(int i = pos_min; i <= pos_max; i++) {
-                        if(!positionInList(new Position(i, position.x()), blankTile)) {
+                    for (int i = pos_min; i <= pos_max; i++) {
+                        if (!positionInList(new Position(i, position.x()), blankTile)) {
                             break;
                         }
                     }
@@ -225,6 +225,29 @@ public class Utils {
         return canAttack;
     }
 
+    public static ArrayList<Position> findNearestDiamonds() {
+        ArrayList<Position> alreadyPickedPositions = new ArrayList<Position>();
+        ArrayList<Position> nearDiamondPos = new ArrayList<Position>();
+        List<Position> allyPos = findAllyPosition();
+        for (Position p : allyPos) {
+            int bestCost = 100000;
+            Position bestPos = new Position(0, 0);
+            for (Position dpos : DiamondMap.keySet()) {
+                int cost = getDistance(p, dpos);
+                if (cost < bestCost && !alreadyPickedPositions.contains(dpos) && !findHeldDiamond().contains(dpos)) {
+                    bestCost = cost;
+                    bestPos = dpos;
+                }
+                if(bestPos != (new Position(0, 0)))
+                {
+                    nearDiamondPos.add(bestPos);
+                    alreadyPickedPositions.add(bestPos);
+                }
 
-
+            }
+        }
+        System.out.println(alreadyPickedPositions);
+        System.out.println(nearDiamondPos+"\n");
+        return nearDiamondPos;
+    }
 }
