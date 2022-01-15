@@ -36,6 +36,7 @@ public class Bot
         Utils.findPlayers();
         Utils.createDiamondMap();
         Utils.createUnitMap();
+        Utils.createPlayerMap();
 
         Team myTeam = gameMessage.teamsMapById().get(gameMessage.teamId());
         GameMap map = gameMessage.map();

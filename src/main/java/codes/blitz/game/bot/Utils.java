@@ -12,24 +12,32 @@ public class Utils {
 
     public static GameMessage m_message;
     public static Map<Position, Integer> DiamondMap;
-    public static Map<Position, Boolean> UnitMap;
+    public static Map<Position, String> EnemyMap;
+    public static Map<String, Position> PlayerMap;
     public static ArrayList<Position> spawnTiles = new ArrayList<Position>();
     public static ArrayList<Position> wallTiles = new ArrayList<Position>();
     public static ArrayList<Position> blankTile = new ArrayList<Position>();
-    public static Map<String, Position> playerMap = new HashMap<>();
-    public static Map<String, Position> enemyMap = new HashMap<>();
 
 
     public static void createUnitMap() {
-        UnitMap = new HashMap<>();
+        EnemyMap = new HashMap<>();
 
         Map<String, Team> teamsMapID = m_message.teamsMapById();
         // retrait de notre équipe
         teamsMapID.remove(m_message.teamId());
 
 
-        teamsMapID.forEach((s, team) -> { team.units().forEach((unit) -> UnitMap.put(unit.position(), true)); });
+        teamsMapID.forEach((s, team) -> {
+            team.units().forEach((unit) -> EnemyMap.put(unit.position(), unit.id()));
+        });
+    }
 
+    public static void createPlayerMap() {
+        PlayerMap = new HashMap<>();
+
+        m_message.teamsMapById().get(m_message.teamId()).units().forEach((unit) -> {
+            PlayerMap.put(unit.id(), unit.position());
+        });
     }
 
     public static void createDiamondMap() {
@@ -50,7 +58,7 @@ public class Utils {
 
         DiamondMap.forEach((pos, val) -> {
             if (val > 0) {
-                if (UnitMap.containsKey(pos)) {
+                if (EnemyMap.containsKey(pos)) {
                     hDiamonds.add(pos);
                 }
             }
@@ -77,7 +85,7 @@ public class Utils {
     public static void findPlayers()
     {
         m_message.teamsMapById().get(m_message.teamId()).units().forEach((unit) -> {
-            playerMap.put(unit.id(), unit.position());
+            PlayerMap.put(unit.id(), unit.position());
         });
 
     }
@@ -146,7 +154,7 @@ public class Utils {
     public boolean isMenacer(Position x) {
         for (int i = 0; i < Bot.taha_fait_vraiment_chier; i++) {
             for (int j = 0; j < Bot.taha_fait_vraiment_chier; j++) {
-                if (UnitMap.containsKey(new Position(x.x() + i, x.y() + j))) {
+                if (EnemyMap.containsKey(new Position(x.x() + i, x.y() + j))) {
                     return true;
                 }
             }
@@ -203,11 +211,20 @@ public class Utils {
         return positions;
     }
 
-    public static Position findIfEnemyAdjacent(String id)
+    public static Boolean findIfEnemyAdjacent(String id)
     {
-       Position pos = playerMap.get(id);
-        for (Position enemyPos: EnemyPos.value) {
-            if(enemyPos.x() )
+        Boolean canAttack = false;
+        Position pos = PlayerMap.get(id);
+        for (Position enemyPos: EnemyMap.keySet()) {
+            if((enemyPos.x() == pos.x() + 1 || enemyPos.x() == pos.x() - 1)
+            && (enemyPos.y() != pos.y() + 1 || enemyPos.y() != pos.y() - 1))
+            {
+               canAttack = true;
+            }
         }
+        return canAttack;
     }
+
+
+
 }
