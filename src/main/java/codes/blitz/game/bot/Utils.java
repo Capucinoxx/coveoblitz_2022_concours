@@ -285,4 +285,21 @@ public class Utils {
 
         return nearDiamondPos;
     }
+
+    public static Position chaseEnemy(String id) {
+        Position playerPosition = PlayerMap.get(id);
+        Position minEnemyPos = null;
+        int minDistance = 0;
+        int currentDistance;
+
+        for(Position enemyPos : EnemyMap.keySet()) {
+            currentDistance = getDistance(enemyPos, playerPosition);
+            if(minDistance > currentDistance) {
+                minDistance = currentDistance;
+                minEnemyPos = enemyPos;
+            }
+        }
+
+        return minEnemyPos;
+    }
 }
