@@ -396,4 +396,16 @@ public class Utils {
             return null;
         }
     }
+    public static boolean isMovable(Position target, Position currPosition)
+    {
+        if(Bot.EnemyMap.keySet().contains(target) || Bot.wallTiles.contains(target) ||
+                Bot.PlayerMap.keySet().contains(target) ||
+                (Bot.spawnTiles.contains(target) && !Bot.spawnTiles.contains(currPosition)) ||
+                target.x() < 0 || target.y() < 0 || target.x() >= Bot.m_message.map().horizontalSize()
+                || target.y() >= Bot.m_message.map().verticalSize())
+        {
+            return false;
+        }
+        return true;
+    }
 }
