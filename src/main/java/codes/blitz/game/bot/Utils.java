@@ -14,7 +14,7 @@ public class Utils {
 
     public static Map<Position, String> EnemyMap;
     public static Map<String, Position> PlayerMap;
-    public static Map<Position, Integer> DiamondMap = new HashMap<>();
+    public static Map<Position, Diamond> DiamondMap = new HashMap<>();
     public static ArrayList<Position> spawnTiles = new ArrayList<Position>();
     public static ArrayList<Position> wallTiles = new ArrayList<Position>();
     public static ArrayList<Position> blankTile = new ArrayList<Position>();
@@ -33,6 +33,16 @@ public class Utils {
         });
     }
 
+    public static  int getSummonLevel(String id) {
+        Position pos = PlayerMap.get(id);
+
+        if (!DiamondMap.containsKey(pos)) {
+            return -1;
+        }
+
+        return DiamondMap.get(pos).summonLevel();
+    }
+
     public static void createPlayerMap() {
         PlayerMap = new HashMap<>();
         m_message.teamsMapById().get(m_message.teamId()).units().forEach((unit) -> {
@@ -44,7 +54,7 @@ public class Utils {
         DiamondMap = new HashMap<>();
 
         m_message.map().diamonds().forEach((diamond) -> {
-            DiamondMap.put(diamond.position(), diamond.points());
+            DiamondMap.put(diamond.position(), diamond);
         });
     }
 
@@ -56,8 +66,8 @@ public class Utils {
 
         ArrayList<Position> hDiamonds = new ArrayList<>();
 
-        DiamondMap.forEach((pos, val) -> {
-            if (val > 0) {
+        DiamondMap.forEach((pos, diamond) -> {
+            if (diamond.points() > 0) {
                 if (EnemyMap.containsKey(pos)) {
                     hDiamonds.add(pos);
                 }
@@ -145,7 +155,7 @@ public class Utils {
                 int cost = getDistance(x, enemy.getKey());
                 if (
                   cost < distance
-                  || (cost == distance && DiamondMap.get(enemy.getKey()) > DiamondMap.get(enemyPos))
+                  || (cost == distance && DiamondMap.get(enemy.getKey()).points() > DiamondMap.get(enemyPos).points())
                 ) {
                     enemyPos = enemy.getKey();
                     distance = cost;
@@ -243,6 +253,8 @@ public class Utils {
                canAttack = true;
             }
         }
+
+
         return canAttack;
     }
 
