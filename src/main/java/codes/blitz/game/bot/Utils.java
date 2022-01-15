@@ -322,4 +322,29 @@ public class Utils {
 
         return minEnemyPos;
     }
+
+    public static Position whereToDrop(Position playerPosition)
+    {
+        Position north = new Position(playerPosition.x(), playerPosition.y()-1);
+        Position south = new Position(playerPosition.x(), playerPosition.y()+1);
+        Position east = new Position(playerPosition.x()+1, playerPosition.y());
+        Position west = new Position(playerPosition.x()-1, playerPosition.y());
+        if (!Bot.wallTiles.contains(north) && !Bot.wallTiles.contains(north))
+        {
+            return north;
+        } else if (!Bot.wallTiles.contains(south) && !Bot.wallTiles.contains(south))
+        {
+            return south;
+        } else if (!Bot.wallTiles.contains(east) && !Bot.wallTiles.contains(east))
+        {
+            return east;
+        } else if (!Bot.wallTiles.contains(west) && !Bot.wallTiles.contains(west))
+        {
+            return west;
+        }
+        else
+        {
+            return null;
+        }
+    }
 }
