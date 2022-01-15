@@ -253,14 +253,21 @@ public class Utils {
         Boolean canAttack = false;
         Position pos = PlayerMap.get(id);
         for (Position enemyPos: EnemyMap.keySet()) {
+            if(enemyPos == null)
+            {
+                continue;
+            }
             if((enemyPos.x() == pos.x() + 1 || enemyPos.x() == pos.x() - 1)
-            && (enemyPos.y() != pos.y() + 1 || enemyPos.y() != pos.y() - 1))
+                && (enemyPos.y() != pos.y() + 1 || enemyPos.y() != pos.y() - 1))
             {
                return enemyPos;
             }
+            if((enemyPos.y() == pos.y() + 1 || enemyPos.y() == pos.y() - 1)
+                    && (enemyPos.x() != pos.x() + 1 || enemyPos.x() != pos.x() - 1))
+            {
+                return enemyPos;
+            }
         }
-
-
         return null;
     }
 
