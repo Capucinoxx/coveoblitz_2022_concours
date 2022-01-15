@@ -135,6 +135,29 @@ public class Utils {
         }
     }
 
+    /*
+     * retourne la position de l'ennemi le plus proche ayant un diamant. S'il n'y en a pas, retourne null.
+     */
+    public static Position findEnemyPlayerWithDiamond(Position x) {
+        Position enemyPos = null;
+        int distance = 9999999;
+
+        for (Map.Entry<Position, String> enemy : EnemyMap.entrySet()) {
+            if (DiamondMap.containsKey(enemy.getKey())) {
+                int cost = getDistance(x, enemy.getKey());
+                if (
+                  cost < distance
+                  || (cost == distance && DiamondMap.get(enemy.getKey()) > DiamondMap.get(enemyPos))
+                ) {
+                    enemyPos = enemy.getKey();
+                    distance = cost;
+                }
+            }
+        }
+
+        return enemyPos;
+    }
+
     public Position findNearestPlayer(Position x) {
         List<Position> players = this.findPlayersPosition();
         Position best = players.get(0);
