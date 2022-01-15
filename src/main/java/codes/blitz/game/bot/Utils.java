@@ -179,7 +179,7 @@ public class Utils {
     public static Position isMenacer(Position x, int nb_tour) {
         if(nb_tour == 5)
         {
-            nb_tour = 0;
+            nb_tour = 3;
         }
 
         for (Position enemyPos : Bot.EnemyMap.keySet())
