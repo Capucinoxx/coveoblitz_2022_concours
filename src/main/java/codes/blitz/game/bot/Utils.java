@@ -337,7 +337,7 @@ public class Utils {
                     diamondtoRemovePos = dPos;
                 }
             }
-            if(Bot.spawnTiles.contains(bestPos))
+            if(Bot.spawnTiles.contains(bestPos) && !checkBlockingSpawnPosition(bestPos))
             {
                 spawnPos.add(bestPos);
                 usedSpawn.add(tileToRemovePos);
