@@ -155,7 +155,7 @@ public class Bot
                             Utils.whereToDrop(currUnit.position()));
                 }
             }
-            else if (currUnit.hasDiamond() && Utils.getSummonLevel(currUnit.id()) <= 5 &&
+            else if (currUnit.hasDiamond() && Utils.getSummonLevel(currUnit.id()) < 5 &&
                     m_message.tick()-m_message.totalTick() >  Utils.getSummonLevel(currUnit.id())+1)
             {
                 tempStream = new UnitAction(UnitActionType.SUMMON,
