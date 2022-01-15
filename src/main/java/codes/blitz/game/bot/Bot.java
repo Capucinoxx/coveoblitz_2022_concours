@@ -89,7 +89,7 @@ public class Bot
             ArrayList<Position> nearestDiamonds = Utils.findNearestDiamonds();
             Position enemyDiamondPos = Utils.findEnemyPlayerWithDiamond(currUnit.position());
             if ((!currUnit.hasDiamond() && nearestDiamonds.size() > Integer.parseInt(currUnit.id())-1) ||
-                    (!currUnit.hasDiamond() && enemyDiamondPos != null && Utils.getDistance(currUnit.position(), enemyDiamondPos) == 1 && !spawnTiles.contains(currUnit.position()))) {
+                    (!currUnit.hasDiamond() && enemyDiamondPos != null && Utils.getDistance(currUnit.position(), enemyDiamondPos) > 1)) {
 
                 if(enemyDiamondPos != null && (nearestDiamonds.size() <= Integer.parseInt(currUnit.id()) - 1 || Utils.getDistance(nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1), currUnit.position()) >
                         Utils.getDistance(Utils.whereToDrop(enemyDiamondPos), currUnit.position())))
