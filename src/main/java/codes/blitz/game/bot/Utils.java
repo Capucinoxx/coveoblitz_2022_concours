@@ -148,7 +148,8 @@ public class Utils {
             if (Bot.DiamondMap.containsKey(enemy.getKey())) {
                 int cost = getDistance(x, enemy.getKey());
                 if (
-                        Bot.DiamondMap.get(enemyPos) != null && (Bot.DiamondMap.get(enemy.getKey()).points() > Bot.DiamondMap.get(enemyPos).points() ||
+                        Bot.DiamondMap.get(enemy.getKey()) != null && Bot.DiamondMap.get(enemyPos) != null &&
+                                (Bot.DiamondMap.get(enemy.getKey()).points() > Bot.DiamondMap.get(enemyPos).points() ||
                   (Bot.DiamondMap.get(enemy.getKey()).points() == Bot.DiamondMap.get(enemyPos).points() && cost < distance))
                 ) {
                     enemyPos = enemy.getKey();
@@ -438,25 +439,25 @@ public class Utils {
         Position east = new Position(playerPosition.x()+1, playerPosition.y());
         Position west = new Position(playerPosition.x()-1, playerPosition.y());
         if (!Bot.wallTiles.contains(north) && !Bot.spawnTiles.contains(north) && !Bot.EnemyMap.containsKey(north)
-                && !Bot.PlayerMap.containsKey(north)
+                && !Bot.PlayerMap.containsValue(north)
                 && north.x() >= 0 && north.x() < Bot.m_message.map().horizontalSize() &&
                 north.y() >= 0 && north.y() < Bot.m_message.map().verticalSize())
         {
             return north;
         } else if (!Bot.wallTiles.contains(south) && !Bot.spawnTiles.contains(south) && !Bot.EnemyMap.containsKey(south)
-                && !Bot.PlayerMap.containsKey(south)
+                && !Bot.PlayerMap.containsValue(south)
                 && south.x() >= 0 && south.x() < Bot.m_message.map().horizontalSize() &&
                 south.y() >= 0 && south.y() < Bot.m_message.map().verticalSize())
         {
             return south;
         } else if (!Bot.wallTiles.contains(east) && !Bot.spawnTiles.contains(east) && !Bot.EnemyMap.containsKey(east)
-                && !Bot.PlayerMap.containsKey(east)
+                && !Bot.PlayerMap.containsValue(east)
                 && east.x() >= 0 && east.x() < Bot.m_message.map().horizontalSize() &&
                 east.y() >= 0 && east.y() < Bot.m_message.map().verticalSize())
         {
             return east;
         } else if (!Bot.wallTiles.contains(west) && !Bot.spawnTiles.contains(west) && !Bot.EnemyMap.containsKey(west)
-                && !Bot.PlayerMap.containsKey(west)
+                && !Bot.PlayerMap.containsValue(west)
                 && west.x() >= 0 && west.x() < Bot.m_message.map().horizontalSize() &&
                 west.y() >= 0 && west.y() < Bot.m_message.map().verticalSize())
         {
