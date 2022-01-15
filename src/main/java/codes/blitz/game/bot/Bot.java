@@ -87,7 +87,7 @@ public class Bot
             }
             Map<String, Position> mapNearestDiamond;
             ArrayList<Position> nearestDiamonds = Utils.findNearestDiamonds();
-            if (!currUnit.hasDiamond() && !(nearestDiamonds.size() <= Integer.parseInt(currUnit.id())-1)) {
+            if (!currUnit.hasDiamond() && nearestDiamonds.size() > Integer.parseInt(currUnit.id())-1) {
                 tempStream = new UnitAction(UnitActionType.MOVE,
                         currUnit.id(),
                         nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1));
@@ -100,7 +100,7 @@ public class Bot
             if(!currUnit.hasDiamond() && enemyDiamondPos != null && Utils.getDistance(currUnit.position(), enemyDiamondPos) == 1 && !spawnTiles.contains(currUnit.position())) {
                 tempStream = new UnitAction(UnitActionType.ATTACK, currUnit.id(), enemyDiamondPos);
             }
-            else if(!currUnit.hasDiamond() && enemyDiamondPos != null) {
+            else if(!currUnit.hasDiamond() && enemyDiamondPos != null && Utils.getDistance(currUnit.position(), enemyDiamondPos) > 1) {
                 tempStream = new UnitAction(UnitActionType.MOVE,
                         currUnit.id(),
                         Utils.whereToDrop(enemyDiamondPos));
@@ -147,7 +147,8 @@ public class Bot
                             Utils.whereToDrop(currUnit.position()));
                 }
             }
-            else if (currUnit.hasDiamond() && Utils.getSummonLevel(currUnit.id()) != 5)
+            else if (currUnit.hasDiamond() && Utils.getSummonLevel(currUnit.id()) <= 5 &&
+                    m_message.tick()-m_message.totalTick() >  Utils.getSummonLevel(currUnit.id())+1)
             {
                 tempStream = new UnitAction(UnitActionType.SUMMON,
                         currUnit.id(),
