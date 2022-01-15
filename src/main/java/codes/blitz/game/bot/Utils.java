@@ -147,7 +147,6 @@ public class Utils {
                 }
                 nearDiamondPos.add(bestPos);
             }
-
         }
         return nearDiamondPos;
     }
