@@ -98,17 +98,11 @@ public class Bot
                         currUnit.id(),
                         Utils.whereToDrop(enemyDiamondPos));
                 }
-                else if (nearestDiamonds.size() > Integer.parseInt(currUnit.id()) - 1)
-                {
-                    tempStream = new UnitAction(UnitActionType.MOVE,
-                            currUnit.id(),
-                            nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1));
-                }
                 else
                 {
                     tempStream = new UnitAction(UnitActionType.MOVE,
                             currUnit.id(),
-                            getRandomPosition(map));
+                            nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1));
                 }
                 allActions.add(tempStream);
                 continue;
