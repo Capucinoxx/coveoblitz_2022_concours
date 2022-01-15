@@ -391,22 +391,22 @@ public class Utils {
         Position south = new Position(playerPosition.x(), playerPosition.y()+1);
         Position east = new Position(playerPosition.x()+1, playerPosition.y());
         Position west = new Position(playerPosition.x()-1, playerPosition.y());
-        if (Bot.blankTile.contains(north) && !Bot.EnemyMap.keySet().contains(north) && !Bot.PlayerMap.keySet().contains(north)
+        if (Bot.blankTile.contains(north) && !Bot.EnemyMap.keySet().contains(north) && !Bot.PlayerMap.values().contains(north)
                 && north.x() >= 0 && north.x() < Bot.m_message.map().horizontalSize() &&
                 north.y() >= 0 && north.y() < Bot.m_message.map().verticalSize())
         {
             return north;
-        } else if (Bot.blankTile.contains(south) && !Bot.EnemyMap.keySet().contains(south) && !Bot.PlayerMap.keySet().contains(south)
+        } else if (Bot.blankTile.contains(south) && !Bot.EnemyMap.keySet().contains(south) && !Bot.PlayerMap.values().contains(south)
                 && south.x() >= 0 && south.x() < Bot.m_message.map().horizontalSize() &&
                 south.y() >= 0 && south.y() < Bot.m_message.map().verticalSize())
         {
             return south;
-        } else if (Bot.blankTile.contains(east) && !Bot.EnemyMap.keySet().contains(east) && !Bot.PlayerMap.keySet().contains(east)
+        } else if (Bot.blankTile.contains(east) && !Bot.EnemyMap.keySet().contains(east) && !Bot.PlayerMap.values().contains(east)
                 && east.x() >= 0 && east.x() < Bot.m_message.map().horizontalSize() &&
                 east.y() >= 0 && east.y() < Bot.m_message.map().verticalSize())
         {
             return east;
-        } else if (Bot.blankTile.contains(west) && !Bot.EnemyMap.keySet().contains(west) && !Bot.PlayerMap.keySet().contains(west)
+        } else if (Bot.blankTile.contains(west) && !Bot.EnemyMap.keySet().contains(west) && !Bot.PlayerMap.values().contains(west)
                 && west.x() >= 0 && west.x() < Bot.m_message.map().horizontalSize() &&
                 west.y() >= 0 && west.y() < Bot.m_message.map().verticalSize())
         {
