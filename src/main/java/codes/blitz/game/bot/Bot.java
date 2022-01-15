@@ -43,25 +43,30 @@ public class Bot
 
         Team myTeam = gameMessage.teamsMapById().get(gameMessage.teamId());
         GameMap map = gameMessage.map();
-        if (myTeam == null) System.out.println("AAAAAAAAHHHHHHHHHHHHHHHHHHHHH");
 
         var remainingUnits = myTeam.units();
         List<UnitAction> allActions = new ArrayList<>();
+
         for (Unit currUnit : remainingUnits)
         {
+
             UnitAction tempStream = new UnitAction(UnitActionType.MOVE,
                     currUnit.id(),
                     getRandomPosition(map));
+
             if(!currUnit.hasSpawned()){
                 tempStream = new UnitAction(UnitActionType.SPAWN,
                         currUnit.id(),
                         findRandomSpawn(map));
+                allActions.add(tempStream);
+                continue;
             }
-            else if (currUnit.hasSpawned() && !currUnit.hasDiamond() && (Utils.findNearestDiamonds().size() <= Integer.parseInt(currUnit.id())-1))
+            List<Position> nearestDiamonds = Utils.findNearestDiamonds();
+            if (currUnit.hasSpawned() && !currUnit.hasDiamond() && !(nearestDiamonds.size() <= Integer.parseInt(currUnit.id())-1))
             {
                 tempStream = new UnitAction(UnitActionType.MOVE,
                         currUnit.id(),
-                                Utils.findNearestDiamonds().get(Integer.parseInt(currUnit.id())-1));
+                        nearestDiamonds.get(Integer.parseInt(currUnit.id())-1));
             }
             else if (currUnit.hasDiamond() && gameMessage.tick() == gameMessage.totalTick()-1)
             {
@@ -74,6 +79,12 @@ public class Bot
                 tempStream = new UnitAction(UnitActionType.DROP,
                                 currUnit.id(),
                             new Position(currUnit.position().x()+1, currUnit.position().y()));
+            }
+            else if (currUnit.hasDiamond())
+            {
+                tempStream = new UnitAction(UnitActionType.SUMMON,
+                        currUnit.id(),
+                        currUnit.position());
             }
 
             allActions.add(tempStream);
