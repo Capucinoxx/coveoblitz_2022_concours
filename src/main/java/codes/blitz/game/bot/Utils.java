@@ -148,8 +148,8 @@ public class Utils {
             if (Bot.DiamondMap.containsKey(enemy.getKey())) {
                 int cost = getDistance(x, enemy.getKey());
                 if (
-                        Bot.DiamondMap.get(enemy.getKey()).points() > Bot.DiamondMap.get(enemyPos).points() ||
-                  (Bot.DiamondMap.get(enemy.getKey()).points() == Bot.DiamondMap.get(enemyPos).points() && cost < distance)
+                        Bot.DiamondMap.get(enemyPos) != null && (Bot.DiamondMap.get(enemy.getKey()).points() > Bot.DiamondMap.get(enemyPos).points() ||
+                  (Bot.DiamondMap.get(enemy.getKey()).points() == Bot.DiamondMap.get(enemyPos).points() && cost < distance))
                 ) {
                     enemyPos = enemy.getKey();
                     distance = cost;
