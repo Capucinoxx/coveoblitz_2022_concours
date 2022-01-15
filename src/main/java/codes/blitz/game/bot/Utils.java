@@ -92,13 +92,15 @@ public class Utils {
 
     }
 
-    public List<Position> findPlayersPosition()
+    public static List<Position> findPlayersPosition()
     {
         List<Position> positions = new ArrayList<>();
 
         Bot.m_message.teams().forEach((team) -> {
             team.units().forEach((unit) -> {
-                positions.add(unit.position());
+                if(unit.position() != null) {
+                    positions.add(unit.position());
+                }
             });
         });
 
@@ -158,13 +160,13 @@ public class Utils {
         return enemyPos;
     }
 
-    public Position findNearestPlayer(Position x) {
-        List<Position> players = this.findPlayersPosition();
+    public static Position findNearestPlayer(Position x) {
+        List<Position> players = findPlayersPosition();
         Position best = players.get(0);
-        int cost = this.getDistance(x, best);
+        int cost = getDistance(x, best);
 
         for (int i = 1; i < players.size(); i++) {
-            int intermediate_cost = this.getDistance(x, players.get(i));
+            int intermediate_cost = getDistance(x, players.get(i));
             if (intermediate_cost < cost) {
                 cost = intermediate_cost;
                 best = players.get(i);
@@ -257,7 +259,7 @@ public class Utils {
     public static ArrayList<Position> findNearestDiamonds() {
         ArrayList<Position> nearDiamondPos = new ArrayList<Position>();
         for (Position p : Bot.PlayerMap.values()) {
-
+            if(p == null) continue;
             int bestCost = Integer.MAX_VALUE;
             Position bestPos = new Position(0, 0);
             for (Position dpos : Bot.DiamondMap.keySet()) {
@@ -324,5 +326,30 @@ public class Utils {
         }
 
         return minEnemyPos;
+    }
+
+    public static Position whereToDrop(Position playerPosition)
+    {
+        Position north = new Position(playerPosition.x(), playerPosition.y()-1);
+        Position south = new Position(playerPosition.x(), playerPosition.y()+1);
+        Position east = new Position(playerPosition.x()+1, playerPosition.y());
+        Position west = new Position(playerPosition.x()-1, playerPosition.y());
+        if (!Bot.wallTiles.contains(north) && !Bot.wallTiles.contains(north) && !Bot.EnemyMap.containsKey(north))
+        {
+            return north;
+        } else if (!Bot.wallTiles.contains(south) && !Bot.wallTiles.contains(south) && !Bot.EnemyMap.containsKey(south))
+        {
+            return south;
+        } else if (!Bot.wallTiles.contains(east) && !Bot.wallTiles.contains(east) && !Bot.EnemyMap.containsKey(east))
+        {
+            return east;
+        } else if (!Bot.wallTiles.contains(west) && !Bot.wallTiles.contains(west) && !Bot.EnemyMap.containsKey(west))
+        {
+            return west;
+        }
+        else
+        {
+            return null;
+        }
     }
 }
