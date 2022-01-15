@@ -243,20 +243,9 @@ public class Utils {
 
     public static Position findIfEnemyAdjacent(String id)
     {
-        Boolean canAttack = false;
         Position pos = Bot.PlayerMap.get(id);
         for (Position enemyPos: Bot.EnemyMap.keySet()) {
-            if(enemyPos == null)
-            {
-                continue;
-            }
-            if((enemyPos.x() == pos.x() + 1 || enemyPos.x() == pos.x() - 1)
-                && (enemyPos.y() != pos.y() + 1 || enemyPos.y() != pos.y() - 1))
-            {
-               return enemyPos;
-            }
-            if((enemyPos.y() == pos.y() + 1 || enemyPos.y() == pos.y() - 1)
-                    && (enemyPos.x() != pos.x() + 1 || enemyPos.x() != pos.x() - 1))
+            if (getDistance(enemyPos, pos) == 1)
             {
                 return enemyPos;
             }
