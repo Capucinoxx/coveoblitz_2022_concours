@@ -13,6 +13,7 @@ import codes.blitz.game.message.game.Team;
 import codes.blitz.game.message.game.TileType;
 import codes.blitz.game.message.game.UnitAction;
 import codes.blitz.game.message.game.UnitActionType;
+import jdk.jshell.execution.Util;
 
 public class Bot
 {
@@ -30,6 +31,7 @@ public class Bot
      */
     public List<UnitAction> getNextActions(GameMessage gameMessage)
     {
+        Utils.CreateDiamondMap();
         Team myTeam = gameMessage.teamsMapById().get(gameMessage.teamId());
         GameMap map = gameMessage.map();
 

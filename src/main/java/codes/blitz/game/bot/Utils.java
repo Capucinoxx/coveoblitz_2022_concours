@@ -3,18 +3,20 @@ package codes.blitz.game.bot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Stream;
 
+import codes.blitz.game.message.exception.PositionOutOfMapException;
 import codes.blitz.game.message.game.*;
 
 public class Utils {
 
-    public GameMessage m_message;
-    public Map<Position, Integer> DiamondMap;
+    public static GameMessage m_message;
+    public static Map<Position, Integer> DiamondMap;
+    public static ArrayList<Position> spawnTiles = new ArrayList<Position>();
+    public static ArrayList<Position> wallTiles = new ArrayList<Position>();
+    public static ArrayList<Position> blankTile = new ArrayList<Position>();
 
-    public void CreateDiamondMap()
+
+    public static void CreateDiamondMap()
     {
         m_message.map().diamonds().forEach((diamond) -> {
             DiamondMap.put(diamond.position(), diamond.points());
@@ -28,7 +30,7 @@ public class Utils {
 
     public void findHeldDiamond() {
         Map.Entry<Position, Integer> entry;
-        ArrayList<Position> unitsPosition = findUnitsPosition();
+        List<Position> unitsPosition = findPlayersPosition();
         ArrayList<Position> hDiamonds = new ArrayList<>();
         DiamondMap.forEach((pos, val) -> {
             if (val > 0) {
@@ -67,4 +69,22 @@ public class Utils {
         return Math.abs(a.x() - b.x()) + Math.abs(a.y() - b.y());
     }
 
+    public static void SortTile() throws PositionOutOfMapException {
+        for(int i = 0; i < m_message.map().horizontalSize(); i++)
+        {
+            for(int j = 0; j < m_message.map().verticalSize(); j++)
+            {
+                Position pos = new Position(i, j);
+                TileType type = m_message.map().tileTypeAt(pos);
+                switch (type) {
+                    case SPAWN:
+                        spawnTiles.add(pos);
+                    case WALL:
+                        wallTiles.add(pos);
+                    case EMPTY:
+                        blankTile.add(pos);
+                }
+            }
+        }
+    }
 }
