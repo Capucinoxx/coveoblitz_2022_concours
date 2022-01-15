@@ -288,7 +288,10 @@ public class Utils {
 
     public static ArrayList<Position> findNearestSpawn() {
         Map<Position, Boolean> removedDiamonds = new HashMap<>();
-        ArrayList<Position> usedSpawn = new ArrayList<>();
+        ArrayList<Position> usedSpawn = new ArrayList<>(Bot.EnemyMap.keySet());
+        usedSpawn.addAll(Bot.PlayerMap.values());
+
+
         ArrayList<Position> spawnPos = new ArrayList<>();
 
         int bestCost = 100000;
