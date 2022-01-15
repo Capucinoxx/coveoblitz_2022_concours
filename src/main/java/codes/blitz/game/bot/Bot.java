@@ -62,8 +62,8 @@ public class Bot
                 continue;
             }
             List<Position> nearestDiamonds = Utils.findNearestDiamonds();
-            Position enemyPos;
-            if (!currUnit.hasDiamond() && (enemyPos = Utils.findIfEnemyAdjacent(currUnit.id())) != null && !Utils.spawnTiles.contains(enemyPos))
+            Position enemyPos = Utils.findIfEnemyAdjacent(currUnit.id());
+            if (!currUnit.hasDiamond() && enemyPos != null && !Utils.spawnTiles.contains(enemyPos))
             {
                 tempStream = new UnitAction(UnitActionType.ATTACK,
                         currUnit.id(),
