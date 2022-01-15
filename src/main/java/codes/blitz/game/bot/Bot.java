@@ -64,22 +64,29 @@ public class Bot
                     getRandomPosition(map));
 
             if(!currUnit.hasSpawned()){
-                tempStream = new UnitAction(UnitActionType.SPAWN,
-                        currUnit.id(),
-                        Utils.findNearestSpawn().get(Integer.parseInt(currUnit.id()) - 1));
-                allActions.add(tempStream);
+                try{
+                    tempStream = new UnitAction(UnitActionType.SPAWN,
+                            currUnit.id(),
+                            Utils.findNearestSpawn().get(Integer.parseInt(currUnit.id()) - 1));
+                    allActions.add(tempStream);
+                } catch (IndexOutOfBoundsException e) {
+                    tempStream = new UnitAction(UnitActionType.SPAWN,
+                            currUnit.id(),
+                            findRandomSpawn(map));
+                    allActions.add(tempStream);
+                }
                 continue;
             }
 
             List<Position> nearestDiamonds = Utils.findNearestDiamonds();
-            Position enemyPos = Utils.findIfEnemyAdjacent(currUnit.id());
+            /*Position enemyPos = Utils.findIfEnemyAdjacent(currUnit.id());
             if (!currUnit.hasDiamond() && enemyPos != null && !spawnTiles.contains(enemyPos) && !spawnTiles.contains(currUnit))
             {
                 tempStream = new UnitAction(UnitActionType.ATTACK,
                         currUnit.id(),
                         enemyPos);
             }
-            else if (!currUnit.hasDiamond() && !(nearestDiamonds.size() <= Integer.parseInt(currUnit.id())-1)) {
+            else*/ if (!currUnit.hasDiamond() && !(nearestDiamonds.size() <= Integer.parseInt(currUnit.id())-1)) {
             tempStream = new UnitAction(UnitActionType.MOVE,
                     currUnit.id(),
                     nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1));
