@@ -77,7 +77,7 @@ public class Utils {
         return positions;
     }
 
-    public int getDistance(Position a, Position b) {
+    public static int getDistance(Position a, Position b) {
         return Math.abs(a.x() - b.x()) + Math.abs(a.y() - b.y());
     }
 
@@ -103,16 +103,32 @@ public class Utils {
     public Position findNearestPlayer(Position x) {
         List<Position> players = this.findPlayersPosition();
         Position best = players.get(0);
-        int cost = this.getDistance(x, best);
+        int cost = getDistance(x, best);
 
         for (int i = 1; i < players.size(); i++) {
-            int intermediate_cost = this.getDistance(x, players.get(i));
+            int intermediate_cost = getDistance(x, players.get(i));
             if (intermediate_cost < cost) {
                 cost = intermediate_cost;
                 best = players.get(i);
             }
         }
-
         return best;
+    }
+
+    public static Position findNearestSpawn()
+    {
+        int bestCost = 100000;
+        Position bestPos = new Position(0, 0);
+        for (Position p: spawnTiles) {
+            for (Position dpos:DiamondMap.keySet()) {
+                int cost = getDistance(p, dpos);
+                if(cost < bestCost)
+                {
+                    bestCost = cost;
+                    bestPos = p;
+                }
+            }
+        }
+        return bestPos;
     }
 }
