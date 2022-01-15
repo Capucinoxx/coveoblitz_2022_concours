@@ -78,9 +78,13 @@ public class Bot
                     allActions.add(tempStream);
                 } catch (IndexOutOfBoundsException e) {
                     System.out.println("RANDOM  SPAWN");
+                    Position randomPosition = findRandomSpawn(map);
+                    while(Utils.checkBlockingSpawnPosition(randomPosition)) {
+                        randomPosition = findRandomSpawn(map);
+                    }
                     tempStream = new UnitAction(UnitActionType.SPAWN,
                             currUnit.id(),
-                            findRandomSpawn(map));
+                            randomPosition);
                     allActions.add(tempStream);
                 }
                 continue;
