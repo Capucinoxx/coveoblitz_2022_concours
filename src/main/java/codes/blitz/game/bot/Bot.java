@@ -66,7 +66,7 @@ public class Bot
             if(!currUnit.hasSpawned()){
                 tempStream = new UnitAction(UnitActionType.SPAWN,
                         currUnit.id(),
-                        findRandomSpawn(map));
+                        Utils.findNearestSpawn().get(Integer.parseInt(currUnit.id()) - 1));
                 allActions.add(tempStream);
                 continue;
             }
