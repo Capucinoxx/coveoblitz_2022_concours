@@ -248,7 +248,7 @@ public class Utils {
         return positions;
     }
 
-    public static Boolean findIfEnemyAdjacent(String id)
+    public static Position findIfEnemyAdjacent(String id)
     {
         Boolean canAttack = false;
         Position pos = PlayerMap.get(id);
@@ -256,12 +256,12 @@ public class Utils {
             if((enemyPos.x() == pos.x() + 1 || enemyPos.x() == pos.x() - 1)
             && (enemyPos.y() != pos.y() + 1 || enemyPos.y() != pos.y() - 1))
             {
-               canAttack = true;
+               return enemyPos;
             }
         }
 
 
-        return canAttack;
+        return null;
     }
 
     public static ArrayList<Position> findNearestDiamonds() {

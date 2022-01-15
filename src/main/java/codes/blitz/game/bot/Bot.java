@@ -62,11 +62,17 @@ public class Bot
                 continue;
             }
             List<Position> nearestDiamonds = Utils.findNearestDiamonds();
-            if (currUnit.hasSpawned() && !currUnit.hasDiamond() && !(nearestDiamonds.size() <= Integer.parseInt(currUnit.id())-1))
+            Position enemyPos;
+            if (!currUnit.hasDiamond() && (enemyPos = Utils.findIfEnemyAdjacent(currUnit.id())) != null && !Utils.spawnTiles.contains(enemyPos))
             {
-                tempStream = new UnitAction(UnitActionType.MOVE,
+                tempStream = new UnitAction(UnitActionType.ATTACK,
                         currUnit.id(),
-                        nearestDiamonds.get(Integer.parseInt(currUnit.id())-1));
+                        enemyPos);
+            }
+            else if (!currUnit.hasDiamond() && !(nearestDiamonds.size() <= Integer.parseInt(currUnit.id())-1)) {
+            tempStream = new UnitAction(UnitActionType.MOVE,
+                    currUnit.id(),
+                    nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1));
             }
             else if (currUnit.hasDiamond() && gameMessage.tick() == gameMessage.totalTick()-1)
             {
