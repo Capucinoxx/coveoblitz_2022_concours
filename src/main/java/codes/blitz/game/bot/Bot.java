@@ -91,18 +91,24 @@ public class Bot
             if ((!currUnit.hasDiamond() && nearestDiamonds.size() > Integer.parseInt(currUnit.id())-1) ||
                     (!currUnit.hasDiamond() && enemyDiamondPos != null && Utils.getDistance(currUnit.position(), enemyDiamondPos) == 1 && !spawnTiles.contains(currUnit.position()))) {
 
-                if(enemyDiamondPos != null && Utils.getDistance(nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1), currUnit.position()) >
-                        Utils.getDistance(Utils.whereToDrop(enemyDiamondPos), currUnit.position()))
+                if(enemyDiamondPos != null && (nearestDiamonds.size() <= Integer.parseInt(currUnit.id()) - 1 || Utils.getDistance(nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1), currUnit.position()) >
+                        Utils.getDistance(Utils.whereToDrop(enemyDiamondPos), currUnit.position())))
                 {
                     tempStream = new UnitAction(UnitActionType.MOVE,
                         currUnit.id(),
                         Utils.whereToDrop(enemyDiamondPos));
                 }
-                else
+                else if (nearestDiamonds.size() > Integer.parseInt(currUnit.id()) - 1)
                 {
                     tempStream = new UnitAction(UnitActionType.MOVE,
                             currUnit.id(),
                             nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1));
+                }
+                else
+                {
+                    tempStream = new UnitAction(UnitActionType.MOVE,
+                            currUnit.id(),
+                            getRandomPosition(map));
                 }
                 allActions.add(tempStream);
                 continue;
