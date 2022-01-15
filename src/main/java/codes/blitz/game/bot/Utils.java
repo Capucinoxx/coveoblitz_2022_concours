@@ -182,7 +182,7 @@ public class Utils {
         return best;
     }
 
-    public boolean isMenacer(Position x) {
+    public static boolean isMenacer(Position x) {
         for (int i = 0; i < Bot.taha_fait_vraiment_chier; i++) {
             for (int j = 0; j < Bot.taha_fait_vraiment_chier; j++) {
                 if (EnemyMap.containsKey(new Position(x.x() + i, x.y() + j))) {
@@ -265,26 +265,24 @@ public class Utils {
     }
 
     public static ArrayList<Position> findNearestDiamonds() {
-        ArrayList<Position> alreadyPickedPositions = new ArrayList<Position>();
         ArrayList<Position> nearDiamondPos = new ArrayList<Position>();
         List<Position> allyPos = findAllyPosition();
         for (Position p : allyPos) {
-            int bestCost = 100000;
+            int bestCost = Integer.MAX_VALUE;
             Position bestPos = new Position(0, 0);
             for (Position dpos : DiamondMap.keySet()) {
                 int cost = getDistance(p, dpos);
-                if (cost < bestCost && !alreadyPickedPositions.contains(dpos) && !findHeldDiamond().contains(dpos)) {
+                if (cost < bestCost && !nearDiamondPos.contains(dpos) && !findHeldDiamond().contains(dpos)) {
                     bestCost = cost;
                     bestPos = dpos;
                 }
-                if(bestPos != (new Position(0, 0)))
-                {
-                    nearDiamondPos.add(bestPos);
-                    alreadyPickedPositions.add(bestPos);
-                }
-
+            }
+            if(!(bestPos.x() == 0 && bestPos.y() == 0))
+            {
+                nearDiamondPos.add(bestPos);
             }
         }
+
         return nearDiamondPos;
     }
 }
