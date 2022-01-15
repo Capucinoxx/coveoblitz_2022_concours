@@ -91,19 +91,18 @@ public class Bot
             if ((!currUnit.hasDiamond() && nearestDiamonds.size() > Integer.parseInt(currUnit.id())-1) ||
                     (!currUnit.hasDiamond() && enemyDiamondPos != null && Utils.getDistance(currUnit.position(), enemyDiamondPos) == 1 && !spawnTiles.contains(currUnit.position()))) {
 
-                if(Utils.getDistance(nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1), currUnit.position()) <
+                if(enemyDiamondPos != null && Utils.getDistance(nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1), currUnit.position()) >
                         Utils.getDistance(Utils.whereToDrop(enemyDiamondPos), currUnit.position()))
                 {
                     tempStream = new UnitAction(UnitActionType.MOVE,
-                            currUnit.id(),
-                            nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1));
+                        currUnit.id(),
+                        Utils.whereToDrop(enemyDiamondPos));
                 }
                 else
                 {
                     tempStream = new UnitAction(UnitActionType.MOVE,
                             currUnit.id(),
-                            Utils.whereToDrop(enemyDiamondPos));
-
+                            nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1));
                 }
                 allActions.add(tempStream);
                 continue;
