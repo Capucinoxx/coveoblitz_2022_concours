@@ -245,6 +245,7 @@ public class Utils {
     {
         Position pos = Bot.PlayerMap.get(id);
         for (Position enemyPos: Bot.EnemyMap.keySet()) {
+            if (enemyPos == null) continue;
             if (getDistance(enemyPos, pos) == 1)
             {
                 return enemyPos;
