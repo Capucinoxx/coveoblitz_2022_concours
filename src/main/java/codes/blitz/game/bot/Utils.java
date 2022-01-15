@@ -331,16 +331,16 @@ public class Utils {
         Position south = new Position(playerPosition.x(), playerPosition.y()+1);
         Position east = new Position(playerPosition.x()+1, playerPosition.y());
         Position west = new Position(playerPosition.x()-1, playerPosition.y());
-        if (!Bot.wallTiles.contains(north) && !Bot.wallTiles.contains(north))
+        if (!Bot.wallTiles.contains(north) && !Bot.wallTiles.contains(north) && !Bot.EnemyMap.containsKey(north))
         {
             return north;
-        } else if (!Bot.wallTiles.contains(south) && !Bot.wallTiles.contains(south))
+        } else if (!Bot.wallTiles.contains(south) && !Bot.wallTiles.contains(south) && !Bot.EnemyMap.containsKey(south))
         {
             return south;
-        } else if (!Bot.wallTiles.contains(east) && !Bot.wallTiles.contains(east))
+        } else if (!Bot.wallTiles.contains(east) && !Bot.wallTiles.contains(east) && !Bot.EnemyMap.containsKey(east))
         {
             return east;
-        } else if (!Bot.wallTiles.contains(west) && !Bot.wallTiles.contains(west))
+        } else if (!Bot.wallTiles.contains(west) && !Bot.wallTiles.contains(west) && !Bot.EnemyMap.containsKey(west))
         {
             return west;
         }
