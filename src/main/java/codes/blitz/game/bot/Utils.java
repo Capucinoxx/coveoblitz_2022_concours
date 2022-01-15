@@ -314,6 +314,73 @@ public class Utils {
         return nearDiamondPos;
     }
 
+    public static boolean checkBlockingSpawnPosition(Position possiblePosition) {
+        boolean isNotWallX = true;
+        boolean isNotWallY = true;
+        Position nextPosition;
+        int posY = 0;
+        int posX = 0;
+
+        // Position au coin a gauche
+        if(possiblePosition.y() > 0) {
+            for(int i = possiblePosition.y(); isNotWallY; i--) {
+                nextPosition = new Position(possiblePosition.x(), i);
+                if (Bot.wallTiles.contains(nextPosition)) {
+                    posY = i;
+                    isNotWallY = false;
+                }
+            }
+        }
+
+        if(possiblePosition.x() > 0) {
+            for(int i = possiblePosition.x(); isNotWallX; i--) {
+                nextPosition = new Position(i, possiblePosition.y());
+                if (Bot.wallTiles.contains(nextPosition)) {
+                    posX = i;
+                    isNotWallX = false;
+                }
+            }
+        }
+
+        isNotWallX = true;
+        isNotWallY = true;
+
+        for (int i = posY; isNotWallY; i++) { // en bas
+            for (int j = posX; isNotWallX; j++) { // droite
+                nextPosition = new Position(possiblePosition.x(), j);
+                if (Bot.wallTiles.contains(nextPosition)) {
+                    if(Bot.blankTile.contains(new Position(possiblePosition.x(), j + 1)) &&
+                            Bot.blankTile.contains(new Position(possiblePosition.x(), j - 1)))
+                    {
+                        return true;
+                    }
+                    if(Bot.blankTile.contains(new Position(possiblePosition.x() + 1, j)) &&
+                            Bot.blankTile.contains(new Position(possiblePosition.x() - 1, j)))
+                    {
+                        return true;
+                    }
+                }
+            }
+            nextPosition = new Position(i, possiblePosition.y());
+            if (Bot.wallTiles.contains(nextPosition)) {
+                if (Bot.wallTiles.contains(nextPosition)) {
+                    if(Bot.blankTile.contains(new Position( i + 1, possiblePosition.y())) &&
+                            Bot.blankTile.contains(new Position( i - 1, possiblePosition.y())))
+                    {
+                        return true;
+                    }
+                    if(Bot.blankTile.contains(new Position(i, possiblePosition.y() + 1)) &&
+                            Bot.blankTile.contains(new Position(i, possiblePosition.y() - 1)))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     public static ArrayList<Position> findNearestSpawn() {
         Map<Position, Boolean> removedDiamonds = new HashMap<>();
         ArrayList<Position> usedSpawn = new ArrayList<>(Bot.EnemyMap.keySet());
