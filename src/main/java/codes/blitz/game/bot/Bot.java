@@ -49,7 +49,11 @@ public class Bot
                                                                   unit.id(),
                                                                   getRandomPosition(map)));
 
-        return Stream.concat(deadUnitsActions, aliveUnitsActions).toList();
+        var hasDiamondActions = myTeam.units().stream().filter(unit -> unit.hasDiamond())
+                        .map(unit -> new UnitAction(UnitActionType.DROP,
+                        unit.id(), getRandomPosition(map)));
+        var firstAttempt = Stream.concat(deadUnitsActions, hasDiamondActions);
+        return Stream.concat(firstAttempt, aliveUnitsActions).toList();
     }
 
     private Position findRandomSpawn(GameMap map)
