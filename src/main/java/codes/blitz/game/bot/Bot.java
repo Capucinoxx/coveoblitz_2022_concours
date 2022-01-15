@@ -85,8 +85,8 @@ public class Bot
                 }
                 continue;
             }
-
-            List<Position> nearestDiamonds = Utils.findNearestDiamonds();
+            Map<String, Position> mapNearestDiamond;
+            ArrayList<Position> nearestDiamonds = Utils.findNearestDiamonds();
             if (!currUnit.hasDiamond() && !(nearestDiamonds.size() <= Integer.parseInt(currUnit.id())-1)) {
                 tempStream = new UnitAction(UnitActionType.MOVE,
                         currUnit.id(),

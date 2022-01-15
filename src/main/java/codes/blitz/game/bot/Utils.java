@@ -291,6 +291,7 @@ public class Utils {
     }
 
     public static ArrayList<Position> findNearestDiamonds() {
+        ArrayList<Position> heldDiamond = findHeldDiamond();
         ArrayList<Position> nearDiamondPos = new ArrayList<Position>();
         for (Position p : Bot.PlayerMap.values()) {
             if(p == null) continue;
@@ -298,7 +299,19 @@ public class Utils {
             Position bestPos = new Position(0, 0);
             for (Position dpos : Bot.DiamondMap.keySet()) {
                 int cost = getDistance(p, dpos);
-                if (cost < bestCost && !nearDiamondPos.contains(dpos) && !findHeldDiamond().contains(dpos)) {
+                if (cost < bestCost && !nearDiamondPos.contains(dpos) /*&& !heldDiamond.contains(dpos)*/) {
+                    if(heldDiamond.contains(dpos))
+                    {
+                        for (Position adjP: findMovableAdjacentTile(dpos, p))
+                        {
+                            cost = getDistance(adjP, p);
+                            if(bestCost > cost)
+                            {
+                                bestCost = cost;
+                                bestPos = adjP;
+                            }
+                        }
+                    }
                     bestCost = cost;
                     bestPos = dpos;
                 }
@@ -504,5 +517,17 @@ public class Utils {
         }
 
         return false;
+    }
+    public static ArrayList<Position> findMovableAdjacentTile(Position p, Position playerPos)
+    {
+        ArrayList<Position> pos = new ArrayList<>();
+        pos.add(new Position(p.x(), p.y()-1));
+        pos.add(new Position(p.x(), p.y()+1));
+        pos.add(new Position(p.x()+1, p.y()));
+        pos.add(new Position(p.x()-1, p.y()));
+
+        pos.removeIf(position -> !isMovable(position, playerPos));
+
+        return  pos;
     }
 }
