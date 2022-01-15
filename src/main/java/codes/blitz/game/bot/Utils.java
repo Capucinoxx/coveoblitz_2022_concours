@@ -422,21 +422,45 @@ public class Utils {
         {
             if (currPosition.x() < Bot.m_message.map().horizontalSize()-currPosition.x())
             {
-                return new Position(0, currPosition.y());
+                int x = 0;
+                Position currPath;
+                do {
+                    currPath = new Position(x, currPosition.y());
+                    ++x;
+                } while (!isMovable(currPath, currPosition));
+                return currPath;
             }
             else
             {
-                return new Position(Bot.m_message.map().horizontalSize()-1, currPosition.y());
+                int x = Bot.m_message.map().horizontalSize()-1;
+                Position currPath;
+                do {
+                    currPath = new Position(x, currPosition.y());
+                    --x;
+                } while (!isMovable(currPath, currPosition));
+                return currPath;
             }
         } else {
             {
                 if (currPosition.y() < Bot.m_message.map().verticalSize()-currPosition.y())
                 {
-                    return new Position(currPosition.x(), 0);
+                    int y = 0;
+                    Position currPath;
+                    do {
+                        currPath = new Position(currPosition.x(), y);
+                        ++y;
+                    } while (!isMovable(currPath, currPosition));
+                    return currPath;
                 }
                 else
                 {
-                    return new Position(currPosition.x(), Bot.m_message.map().verticalSize()-1);
+                    int y = Bot.m_message.map().verticalSize()-1;
+                    Position currPath;
+                    do {
+                        currPath = new Position(currPosition.x(), y);
+                        ++y;
+                    } while (!isMovable(currPath, currPosition));
+                    return currPath;
                 }
             }
         }
