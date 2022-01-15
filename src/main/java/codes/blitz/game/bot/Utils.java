@@ -126,10 +126,13 @@ public class Utils {
                 switch (type) {
                     case SPAWN:
                         Bot.spawnTiles.add(pos);
+                        break;
                     case WALL:
                         Bot.wallTiles.add(pos);
+                        break;
                     case EMPTY:
                         Bot.blankTile.add(pos);
+                        break;
                 }
             }
         }
@@ -340,7 +343,7 @@ public class Utils {
                     diamondtoRemovePos = dPos;
                 }
             }
-            if(Bot.spawnTiles.contains(bestPos) && !checkBlockingSpawnPosition(bestPos))
+            if(Bot.spawnTiles.contains(bestPos) && checkBlockingSpawnPosition(bestPos))
             {
                 spawnPos.add(new Pair<Position, Integer>(bestPos, bestCost));
                 usedSpawn.add(tileToRemovePos);
@@ -450,75 +453,47 @@ public class Utils {
 //        return leftPos;
 //    }
 
-    public static boolean checkBlockingSpawnPosition(Position possiblePosition) {
-        boolean isNotWallX = true;
-        boolean isNotWallY = true;
-        Position nextPosition;
-        int posY = possiblePosition.y();
-        int posX = possiblePosition.x();
+    // old_position default value null
+    public static boolean checkBlockingSpawnPosition(Position p) {
+        return checkBlockingSpawnPosition(p, null);
+    }
 
-        // Position au coin a gauche
-        if(posY > 0) {
-            for(int i = posY; isNotWallY; i--) {
-                nextPosition = new Position(possiblePosition.x(), i);
-                if (Bot.wallTiles.contains(nextPosition) || i <= 0) {
-                    posY = i;
-                    isNotWallY = false;
-                }
+    public static boolean checkBlockingSpawnPosition(Position p, Position old_position) {
+        ArrayList<Position> positions = new ArrayList<>(4);
+        if (p.x() != Bot.m_message.map().horizontalSize()-1) {
+            positions.add(new Position(p.x()+1, p.y()));
+        }
+
+        if (p.x() != 0) {
+            positions.add(new Position(p.x()-1, p.y()));
+        }
+
+        if (p.y() != Bot.m_message.map().verticalSize()-1) {
+            positions.add(new Position(p.x(), p.y()+1));
+        }
+
+        if (p.y() != 0) {
+            positions.add(new Position(p.x(), p.y()-1));
+        }
+
+        if (old_position != null) {
+            positions.removeIf(position -> position.x() == old_position.x() && position.y() == old_position.y());
+        }
+
+        for (Position position : positions) {
+            if (Bot.blankTile.contains(position)) {
+                     return true;
             }
         }
 
-        if(posX > 0) {
-            for(int i = posX; isNotWallX; i--) {
-                nextPosition = new Position(i, possiblePosition.y());
-                if (Bot.wallTiles.contains(nextPosition) || i <= 0) {
-                    posX = i;
-                    isNotWallX = false;
-                }
-            }
-        }
-
-        isNotWallX = true;
-        isNotWallY = true;
-
-        for (int i = posY; isNotWallY; i++) { // en bas
-            for (int j = posX; isNotWallX; j++) { // droite
-                nextPosition = new Position(possiblePosition.x(), j);
-                if (Bot.wallTiles.contains(nextPosition)) {
-                    if(nextPosition.y() >= 0 && nextPosition.y() < Bot.m_message.map().verticalSize()) {
-                        if(Bot.blankTile.contains(new Position(possiblePosition.x(), j + 1)) &&
-                                Bot.blankTile.contains(new Position(possiblePosition.x(), j - 1)))
-                        {
-                            return true;
-                        }
-                        if(Bot.blankTile.contains(new Position(possiblePosition.x() + 1, j)) &&
-                                Bot.blankTile.contains(new Position(possiblePosition.x() - 1, j)))
-                        {
-                            return true;
-                        }
-                    }
-
-                }
-            }
-            nextPosition = new Position(i, possiblePosition.y());
-            if (Bot.wallTiles.contains(nextPosition)) {
-                if (Bot.wallTiles.contains(nextPosition)) {
-                    if(nextPosition.x() >= 0 && nextPosition.x() < Bot.m_message.map().horizontalSize()) {
-                        if(Bot.blankTile.contains(new Position( i + 1, possiblePosition.y())) &&
-                                Bot.blankTile.contains(new Position( i - 1, possiblePosition.y())))
-                        {
-                            return true;
-                        }
-                        if(Bot.blankTile.contains(new Position(i, possiblePosition.y() + 1)) &&
-                                Bot.blankTile.contains(new Position(i, possiblePosition.y() - 1)))
-                        {
-                            return true;
-                        }
-                    }
-                }
+        for (Position position : positions) {
+            if (Bot.spawnTiles.contains(position)) {
+                System.out.println(position);
+                return checkBlockingSpawnPosition1(position, p);
             }
         }
 
         return false;
     }
+
 }
