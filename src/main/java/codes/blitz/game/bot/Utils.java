@@ -92,13 +92,15 @@ public class Utils {
 
     }
 
-    public List<Position> findPlayersPosition()
+    public static List<Position> findPlayersPosition()
     {
         List<Position> positions = new ArrayList<>();
 
         Bot.m_message.teams().forEach((team) -> {
             team.units().forEach((unit) -> {
-                positions.add(unit.position());
+                if(unit.position() != null) {
+                    positions.add(unit.position());
+                }
             });
         });
 
@@ -158,13 +160,13 @@ public class Utils {
         return enemyPos;
     }
 
-    public Position findNearestPlayer(Position x) {
-        List<Position> players = this.findPlayersPosition();
+    public static Position findNearestPlayer(Position x) {
+        List<Position> players = findPlayersPosition();
         Position best = players.get(0);
-        int cost = this.getDistance(x, best);
+        int cost = getDistance(x, best);
 
         for (int i = 1; i < players.size(); i++) {
-            int intermediate_cost = this.getDistance(x, players.get(i));
+            int intermediate_cost = getDistance(x, players.get(i));
             if (intermediate_cost < cost) {
                 cost = intermediate_cost;
                 best = players.get(i);
