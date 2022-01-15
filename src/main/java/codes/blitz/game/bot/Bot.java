@@ -1,8 +1,6 @@
 package codes.blitz.game.bot;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
@@ -13,6 +11,15 @@ import jdk.jshell.execution.Util;
 public class Bot
 {
     public static final Integer taha_fait_vraiment_chier = 5;
+
+    public static GameMessage m_message;
+
+    public static Map<Position, String> EnemyMap;
+    public static Map<String, Position> PlayerMap;
+    public static Map<Position, Diamond> DiamondMap = new HashMap<>();
+    public static ArrayList<Position> spawnTiles = new ArrayList<Position>();
+    public static ArrayList<Position> wallTiles = new ArrayList<Position>();
+    public static ArrayList<Position> blankTile = new ArrayList<Position>();
 
     public Bot()
     {
@@ -28,18 +35,20 @@ public class Bot
 
     public List<UnitAction> getNextActions(GameMessage gameMessage)
     {
-        System.out.println("Current tick: "+gameMessage.tick()+"\nTotal tick: "+gameMessage.totalTick());
-        Utils.m_message = gameMessage;
+        m_message = gameMessage;
         Utils.createDiamondMap();
         Utils.createUnitMap();
         Utils.createPlayerMap();
         Utils.findPlayers();
+        if (gameMessage.tick() == 1)
+        {
+            try {
+                Utils.SortTile();
+            } catch (PositionOutOfMapException e) {
 
-        try {
-            Utils.SortTile();
-        } catch (PositionOutOfMapException e) {
-
+            }
         }
+
 
         Team myTeam = gameMessage.teamsMapById().get(gameMessage.teamId());
         GameMap map = gameMessage.map();
@@ -61,9 +70,10 @@ public class Bot
                 allActions.add(tempStream);
                 continue;
             }
+
             List<Position> nearestDiamonds = Utils.findNearestDiamonds();
             Position enemyPos = Utils.findIfEnemyAdjacent(currUnit.id());
-            if (!currUnit.hasDiamond() && enemyPos != null && !Utils.spawnTiles.contains(enemyPos))
+            if (!currUnit.hasDiamond() && enemyPos != null && !spawnTiles.contains(enemyPos) && !spawnTiles.contains(currUnit))
             {
                 tempStream = new UnitAction(UnitActionType.ATTACK,
                         currUnit.id(),
@@ -80,7 +90,7 @@ public class Bot
                         currUnit.id(),
                         new Position(currUnit.position().x()+1, currUnit.position().y()));
             }
-            else if (currUnit.hasDiamond() && Utils.isMenacer(currUnit.position()))
+            else if (currUnit.hasDiamond() && Utils.isMenacer(currUnit.position(), Utils.getSummonLevel(currUnit.id())) != null)
             {
                 tempStream = new UnitAction(UnitActionType.DROP,
                                 currUnit.id(),

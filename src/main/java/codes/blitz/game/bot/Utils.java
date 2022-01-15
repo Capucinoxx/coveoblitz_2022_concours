@@ -10,65 +10,57 @@ import codes.blitz.game.message.game.*;
 
 public class Utils {
 
-    public static GameMessage m_message;
-
-    public static Map<Position, String> EnemyMap;
-    public static Map<String, Position> PlayerMap;
-    public static Map<Position, Diamond> DiamondMap = new HashMap<>();
-    public static ArrayList<Position> spawnTiles = new ArrayList<Position>();
-    public static ArrayList<Position> wallTiles = new ArrayList<Position>();
-    public static ArrayList<Position> blankTile = new ArrayList<Position>();
 
 
     public static void createUnitMap() {
-        EnemyMap = new HashMap<>();
+        Bot.EnemyMap = new HashMap<>();
 
-        Map<String, Team> teamsMapID = new HashMap<>(Map.copyOf(m_message.teamsMapById()));
+        Map<String, Team> teamsMapID = new HashMap<>(Map.copyOf(Bot.m_message.teamsMapById()));
         // retrait de notre équipe
-        teamsMapID.remove(m_message.teamId());
+        teamsMapID.remove(Bot.m_message.teamId());
 
 
         teamsMapID.forEach((s, team) -> {
-            team.units().forEach((unit) -> EnemyMap.put(unit.position(), unit.id()));
+            team.units().forEach((unit) -> Bot.EnemyMap.put(unit.position(), unit.id()));
         });
     }
 
     public static  int getSummonLevel(String id) {
-        Position pos = PlayerMap.get(id);
+        Position pos = Bot.PlayerMap.get(id);
 
-        if (!DiamondMap.containsKey(pos)) {
+        if (!Bot.DiamondMap.containsKey(pos)) {
             return -1;
         }
 
-        return DiamondMap.get(pos).summonLevel();
+        return Bot.DiamondMap.get(pos).summonLevel();
     }
 
     public static void createPlayerMap() {
-        PlayerMap = new HashMap<>();
-        m_message.teamsMapById().get(m_message.teamId()).units().forEach((unit) -> {
-            PlayerMap.put(unit.id(), unit.position());
+        Bot.PlayerMap = new HashMap<>();
+        Bot.m_message.teamsMapById().get(Bot.m_message.teamId()).units().forEach((unit) -> {
+            Bot.PlayerMap.put(unit.id(), unit.position());
         });
     }
 
     public static void createDiamondMap() {
-        DiamondMap = new HashMap<>();
+        Bot.DiamondMap = new HashMap<>();
 
-        m_message.map().diamonds().forEach((diamond) -> {
-            DiamondMap.put(diamond.position(), diamond);
+        Bot.m_message.map().diamonds().forEach((diamond) -> {
+            Bot.DiamondMap.put(diamond.position(), diamond);
         });
     }
 
     public static void SetMap(GameMessage message) {
-        m_message = message;
+        Bot.m_message = message;
     }
 
     public static ArrayList<Position> findHeldDiamond() {
 
         ArrayList<Position> hDiamonds = new ArrayList<>();
 
-        DiamondMap.forEach((pos, diamond) -> {
+        Bot.DiamondMap.forEach((pos, diamond) -> {
             if (diamond.points() > 0) {
-                if (EnemyMap.containsKey(pos)) {
+                if (Bot.EnemyMap.containsKey(pos)) {
                     hDiamonds.add(pos);
                 }
             }
@@ -83,8 +75,8 @@ public class Utils {
     public List<Position> findUnitsPosition() {
         List<Position> positions = new ArrayList<>();
 
-        m_message.teamsMapById().remove(m_message.teamId());
-        m_message.teams().forEach((team) -> {
+        Bot.m_message.teamsMapById().remove(Bot.m_message.teamId());
+        Bot.m_message.teams().forEach((team) -> {
             team.units().forEach((unit) -> {
                 positions.add(unit.position());
             });
@@ -94,8 +86,8 @@ public class Utils {
     }
     public static void findPlayers()
     {
-        m_message.teamsMapById().get(m_message.teamId()).units().forEach((unit) -> {
-            PlayerMap.put(unit.id(), unit.position());
+        Bot.m_message.teamsMapById().get(Bot.m_message.teamId()).units().forEach((unit) -> {
+            Bot.PlayerMap.put(unit.id(), unit.position());
         });
 
     }
@@ -104,7 +96,7 @@ public class Utils {
     {
         List<Position> positions = new ArrayList<>();
 
-        m_message.teams().forEach((team) -> {
+        Bot.m_message.teams().forEach((team) -> {
             team.units().forEach((unit) -> {
                 positions.add(unit.position());
             });
@@ -116,7 +108,7 @@ public class Utils {
     public static List<Position> findAllyPosition() {
         List<Position> positions = new ArrayList<>();
 
-        m_message.teamsMapById().get(m_message.teamId()).units().forEach((unit) -> {
+        Bot.m_message.teamsMapById().get(Bot.m_message.teamId()).units().forEach((unit) -> {
             positions.add(unit.position());
         });
         return positions;
@@ -127,17 +119,17 @@ public class Utils {
     }
 
     public static void SortTile() throws PositionOutOfMapException {
-        for (int i = 0; i < m_message.map().horizontalSize(); i++) {
-            for (int j = 0; j < m_message.map().verticalSize(); j++) {
+        for (int i = 0; i < Bot.m_message.map().horizontalSize(); i++) {
+            for (int j = 0; j < Bot.m_message.map().verticalSize(); j++) {
                 Position pos = new Position(i, j);
-                TileType type = m_message.map().tileTypeAt(pos);
+                TileType type = Bot.m_message.map().tileTypeAt(pos);
                 switch (type) {
                     case SPAWN:
-                        spawnTiles.add(pos);
+                        Bot.spawnTiles.add(pos);
                     case WALL:
-                        wallTiles.add(pos);
+                        Bot.wallTiles.add(pos);
                     case EMPTY:
-                        blankTile.add(pos);
+                        Bot.blankTile.add(pos);
                 }
             }
         }
@@ -150,12 +142,12 @@ public class Utils {
         Position enemyPos = null;
         int distance = 9999999;
 
-        for (Map.Entry<Position, String> enemy : EnemyMap.entrySet()) {
-            if (DiamondMap.containsKey(enemy.getKey())) {
+        for (Map.Entry<Position, String> enemy : Bot.EnemyMap.entrySet()) {
+            if (Bot.DiamondMap.containsKey(enemy.getKey())) {
                 int cost = getDistance(x, enemy.getKey());
                 if (
                   cost < distance
-                  || (cost == distance && DiamondMap.get(enemy.getKey()).points() > DiamondMap.get(enemyPos).points())
+                  || (cost == distance && Bot.DiamondMap.get(enemy.getKey()).points() > Bot.DiamondMap.get(enemyPos).points())
                 ) {
                     enemyPos = enemy.getKey();
                     distance = cost;
@@ -182,15 +174,16 @@ public class Utils {
         return best;
     }
 
-    public static boolean isMenacer(Position x) {
-        for (int i = 0; i < Bot.taha_fait_vraiment_chier; i++) {
-            for (int j = 0; j < Bot.taha_fait_vraiment_chier; j++) {
-                if (EnemyMap.containsKey(new Position(x.x() + i, x.y() + j))) {
-                    return true;
+    public static Position isMenacer(Position x, int nb_tour) {
+        for (int i = 0; i < nb_tour; i++) {
+            for (int j = 0; j < nb_tour; j++) {
+                Position pos = new Position(x.x() + i, x.y() + j);
+                if (Bot.EnemyMap.containsKey(pos)) {
+                    return pos;
                 }
             }
         }
-        return false;
+        return null;
     }
 
     public static boolean positionInList(Position position, List<Position> positions) {
@@ -205,7 +198,7 @@ public class Utils {
     public Position canVine(Unit playerUnit) throws PositionOutOfMapException {
         Position playerPosition = playerUnit.position();
         // Check if not in a spawn tile
-        if (!positionInList(playerPosition, spawnTiles)) {
+        if (!positionInList(playerPosition, Bot.spawnTiles)) {
             SortTile();
             List<Position> positions = findPlayersToVine(playerPosition);
             if(positions.isEmpty() || playerUnit.hasDiamond()) return null;
@@ -226,7 +219,7 @@ public class Utils {
                     int pos_max = (Math.max(playerPosition.y(), position.y()));
 
                     for (int i = pos_min; i <= pos_max; i++) {
-                        if (!positionInList(new Position(position.x(), i), blankTile)) {
+                        if (!positionInList(new Position(position.x(), i), Bot.blankTile)) {
                             break;
                         }
                     }
@@ -236,7 +229,7 @@ public class Utils {
                     int pos_max = (Math.max(playerPosition.x(), position.x()));
 
                     for (int i = pos_min; i <= pos_max; i++) {
-                        if (!positionInList(new Position(i, position.x()), blankTile)) {
+                        if (!positionInList(new Position(i, position.x()), Bot.blankTile)) {
                             break;
                         }
                     }
@@ -251,8 +244,8 @@ public class Utils {
     public static Position findIfEnemyAdjacent(String id)
     {
         Boolean canAttack = false;
-        Position pos = PlayerMap.get(id);
-        for (Position enemyPos: EnemyMap.keySet()) {
+        Position pos = Bot.PlayerMap.get(id);
+        for (Position enemyPos: Bot.EnemyMap.keySet()) {
             if(enemyPos == null)
             {
                 continue;
@@ -277,7 +270,7 @@ public class Utils {
         for (Position p : allyPos) {
             int bestCost = Integer.MAX_VALUE;
             Position bestPos = new Position(0, 0);
-            for (Position dpos : DiamondMap.keySet()) {
+            for (Position dpos : Bot.DiamondMap.keySet()) {
                 int cost = getDistance(p, dpos);
                 if (cost < bestCost && !nearDiamondPos.contains(dpos) && !findHeldDiamond().contains(dpos)) {
                     bestCost = cost;
@@ -303,8 +296,8 @@ public class Utils {
 
         Position diamondtoRemovePos = null;
         Position tileToRemovePos = null;
-        for (Position dPos : DiamondMap.keySet()) {
-            for (Position pos : spawnTiles) {
+        for (Position dPos : Bot.DiamondMap.keySet()) {
+            for (Position pos : Bot.spawnTiles) {
                 int cost = getDistance(dPos, pos);
                 if (cost < bestCost && !removedDiamonds.containsKey(dPos) && !usedSpawn.contains(pos)) {
                     bestCost = cost;
@@ -321,12 +314,12 @@ public class Utils {
     }
 
     public static Position chaseEnemy(String id) {
-        Position playerPosition = PlayerMap.get(id);
+        Position playerPosition = Bot.PlayerMap.get(id);
         Position minEnemyPos = null;
         int minDistance = 0;
         int currentDistance;
 
-        for(Position enemyPos : EnemyMap.keySet()) {
+        for(Position enemyPos : Bot.EnemyMap.keySet()) {
             currentDistance = getDistance(enemyPos, playerPosition);
             if(minDistance > currentDistance) {
                 minDistance = currentDistance;
