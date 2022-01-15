@@ -29,8 +29,7 @@ public class Utils {
     }
 
     public void findHeldDiamond() {
-        Map.Entry<Position, Integer> entry;
-        List<Position> unitsPosition = findPlayersPosition();
+        List<Position> unitsPosition = findUnitsPosition();
         ArrayList<Position> hDiamonds = new ArrayList<>();
         DiamondMap.forEach((pos, val) -> {
             if (val > 0) {
@@ -41,6 +40,19 @@ public class Utils {
                 }
             }
         });
+    }
+
+    public List<Position> findUnitsPosition() {
+        List<Position> positions = new ArrayList<>();
+
+        m_message.teamsMapById().remove(m_message.teamId());
+        m_message.teams().forEach((team) -> {
+            team.units().forEach((unit) -> {
+                positions.add(unit.position());
+            });
+        });
+
+        return positions;
     }
 
     public List<Position> findPlayersPosition()
@@ -86,5 +98,21 @@ public class Utils {
                 }
             }
         }
+    }
+
+    public Position findNearestPlayer(Position x) {
+        List<Position> players = this.findPlayersPosition();
+        Position best = players.get(0);
+        int cost = this.getDistance(x, best);
+
+        for (int i = 1; i < players.size(); i++) {
+            int intermediate_cost = this.getDistance(x, players.get(i));
+            if (intermediate_cost < cost) {
+                cost = intermediate_cost;
+                best = players.get(i);
+            }
+        }
+
+        return best;
     }
 }
