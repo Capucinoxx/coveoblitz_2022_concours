@@ -489,7 +489,7 @@ public class Utils {
         for (Position position : positions) {
             if (Bot.spawnTiles.contains(position)) {
                 System.out.println(position);
-                return checkBlockingSpawnPosition1(position, p);
+                return checkBlockingSpawnPosition(position, p);
             }
         }
 
