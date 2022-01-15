@@ -248,7 +248,7 @@ public class Utils {
         return positions;
     }
 
-    public Boolean findIfEnemyAdjacent(String id)
+    public static Boolean findIfEnemyAdjacent(String id)
     {
         Boolean canAttack = false;
         Position pos = PlayerMap.get(id);

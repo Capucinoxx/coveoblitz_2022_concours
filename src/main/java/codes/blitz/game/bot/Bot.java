@@ -80,7 +80,7 @@ public class Bot
                                 currUnit.id(),
                             new Position(currUnit.position().x()+1, currUnit.position().y()));
             }
-            else if (currUnit.hasDiamond())
+            else if (currUnit.hasDiamond() && Utils.getSummonLevel(currUnit.id()) != 5)
             {
                 tempStream = new UnitAction(UnitActionType.SUMMON,
                         currUnit.id(),
