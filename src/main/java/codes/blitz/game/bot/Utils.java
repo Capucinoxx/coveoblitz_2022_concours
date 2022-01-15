@@ -490,44 +490,24 @@ public class Utils {
             if (currPosition.x() < Bot.m_message.map().horizontalSize()-currPosition.x())
             {
                 int x = 0;
-                Position currPath;
-                do {
-                    currPath = new Position(x, currPosition.y());
-                    ++x;
-                } while (!isMovable(currPath, currPosition));
-                return currPath;
+                return new Position(x, currPosition.y());
             }
             else
             {
                 int x = Bot.m_message.map().horizontalSize()-1;
-                Position currPath;
-                do {
-                    currPath = new Position(x, currPosition.y());
-                    --x;
-                } while (!isMovable(currPath, currPosition));
-                return currPath;
+                return new Position(x, currPosition.y());
             }
         } else {
             {
                 if (currPosition.y() < Bot.m_message.map().verticalSize()-currPosition.y())
                 {
                     int y = 0;
-                    Position currPath;
-                    do {
-                        currPath = new Position(currPosition.x(), y);
-                        ++y;
-                    } while (!isMovable(currPath, currPosition));
-                    return currPath;
+                    return new Position(currPosition.x(), y);
                 }
                 else
                 {
                     int y = Bot.m_message.map().verticalSize()-1;
-                    Position currPath;
-                    do {
-                        currPath = new Position(currPosition.x(), y);
-                        ++y;
-                    } while (!isMovable(currPath, currPosition));
-                    return currPath;
+                    return new Position(currPosition.x(), y);
                 }
             }
         }
