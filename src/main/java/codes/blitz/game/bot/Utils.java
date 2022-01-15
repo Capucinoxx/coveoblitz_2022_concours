@@ -81,7 +81,7 @@ public class Utils {
         });
 
     }
-    
+
     public List<Position> findPlayersPosition()
     {
         List<Position> positions = new ArrayList<>();
@@ -205,6 +205,9 @@ public class Utils {
 
     public static Position findIfEnemyAdjacent(String id)
     {
-
+       Position pos = playerMap.get(id);
+        for (Position enemyPos: EnemyPos.value) {
+            if(enemyPos.x() )
+        }
     }
 }
