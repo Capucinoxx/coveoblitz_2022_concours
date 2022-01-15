@@ -36,8 +36,6 @@ public class Utils {
 
     public static void createPlayerMap() {
         PlayerMap = new HashMap<>();
-
-        System.out.println(m_message.teamsMapById());
         m_message.teamsMapById().get(m_message.teamId()).units().forEach((unit) -> {
             PlayerMap.put(unit.position(), unit.id());
         });
@@ -237,8 +235,6 @@ public class Utils {
 
             }
         }
-        System.out.println(alreadyPickedPositions);
-        System.out.println(nearDiamondPos+"\n");
         return nearDiamondPos;
     }
 }

@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
+import codes.blitz.game.message.exception.PositionOutOfMapException;
 import codes.blitz.game.message.game.GameMap;
 import codes.blitz.game.message.game.GameMessage;
 import codes.blitz.game.message.game.Position;
@@ -39,26 +40,36 @@ public class Bot
         Utils.createUnitMap();
         Utils.createPlayerMap();
 
+        try {
+            Utils.SortTile();
+        } catch (PositionOutOfMapException e) {
+
+        }
+
         Team myTeam = gameMessage.teamsMapById().get(gameMessage.teamId());
         GameMap map = gameMessage.map();
+        if (myTeam == null) System.out.println("AAAAAAAAHHHHHHHHHHHHHHHHHHHHH");
+
 
         var deadUnitsActions = myTeam.units()
-                                     .stream()
-                                     .filter(unit -> !unit.hasSpawned())
-                                     .map(unit -> new UnitAction(UnitActionType.SPAWN,
-                                                                 unit.id(),
-                                                                 findRandomSpawn(map)));
+                .stream()
+                .filter(unit -> !unit.hasSpawned())
+                .map(unit -> new UnitAction(UnitActionType.SPAWN,
+                        unit.id(),
+                        findRandomSpawn(map)));
 
         var aliveUnitsActions = myTeam.units()
-                                      .stream()
-                                      .filter(unit -> unit.hasSpawned())
-                                      .map(unit -> new UnitAction(UnitActionType.MOVE,
-                                                                  unit.id(),
-                                                                  getRandomPosition(map)));
+                .stream()
+                .filter(unit -> unit.hasSpawned())
+                .map(unit -> new UnitAction(UnitActionType.MOVE,
+                        unit.id(),
+                        Utils.findNearestDiamonds().get(Integer.parseInt(unit.id()))
+                ));
 
         var hasDiamondActions = myTeam.units().stream().filter(unit -> unit.hasDiamond())
-                        .map(unit -> new UnitAction(UnitActionType.DROP,
+                .map(unit -> new UnitAction(UnitActionType.DROP,
                         unit.id(), getRandomPosition(map)));
+
         var firstAttempt = Stream.concat(deadUnitsActions, hasDiamondActions);
         return Stream.concat(firstAttempt, aliveUnitsActions).toList();
     }
