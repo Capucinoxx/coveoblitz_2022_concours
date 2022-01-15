@@ -12,7 +12,8 @@ public class Utils {
 
     public static GameMessage m_message;
     public static Map<Position, Integer> DiamondMap;
-    public static Map<Position, Boolean> UnitMap;
+    public static Map<Position, String> UnitMap;
+    public static Map<Position, String> PlayerMap;
     public static ArrayList<Position> spawnTiles = new ArrayList<Position>();
     public static ArrayList<Position> wallTiles = new ArrayList<Position>();
     public static ArrayList<Position> blankTile = new ArrayList<Position>();
@@ -28,8 +29,17 @@ public class Utils {
         teamsMapID.remove(m_message.teamId());
 
 
-        teamsMapID.forEach((s, team) -> { team.units().forEach((unit) -> UnitMap.put(unit.position(), true)); });
+        teamsMapID.forEach((s, team) -> {
+            team.units().forEach((unit) -> UnitMap.put(unit.position(), unit.id()));
+        });
+    }
 
+    public static void createPlayerMap() {
+        PlayerMap = new HashMap<>();
+
+        m_message.teamsMapById().get(m_message.teamId()).units().forEach((unit) -> {
+            PlayerMap.put(unit.position(), unit.id());
+        });
     }
 
     public static void createDiamondMap() {
@@ -203,8 +213,8 @@ public class Utils {
         return positions;
     }
 
-    public static Position findIfEnemyAdjacent(String id)
-    {
-
-    }
+//    public static Position findIfEnemyAdjacent(String id)
+//    {
+//
+//    }
 }
