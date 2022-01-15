@@ -257,6 +257,7 @@ public class Utils {
     public static ArrayList<Position> findNearestDiamonds() {
         ArrayList<Position> nearDiamondPos = new ArrayList<Position>();
         for (Position p : Bot.PlayerMap.values()) {
+
             int bestCost = Integer.MAX_VALUE;
             Position bestPos = new Position(0, 0);
             for (Position dpos : Bot.DiamondMap.keySet()) {
