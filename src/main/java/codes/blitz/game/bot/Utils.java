@@ -193,6 +193,37 @@ public class Utils {
         return null;
     }
 
+    /**
+     * X is 1/-1
+     * Y is 1/-1
+     * Depends on direction of target depending on source
+     * @param source
+     * @param target
+     * @return
+     */
+    public static Position directionOfTarget(Position source, Position target)
+    {
+        int coorX = 0, coorY = 0;
+        if (source.x() - target.x() > 0)
+        {
+            coorX--;
+        }
+        else
+        {
+            coorX++;
+        }
+
+        if (source.y() - target.y() > 0)
+        {
+            coorY--;
+        }
+        else
+        {
+            coorY++;
+        }
+        return new Position(coorX, coorY);
+    }
+
     public static boolean positionInList(Position position, List<Position> positions) {
         for (Position pos : positions) {
             if (position.x() == pos.x() && position.y() == pos.y()) {
