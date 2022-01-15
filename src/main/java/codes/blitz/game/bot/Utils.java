@@ -148,9 +148,8 @@ public class Utils {
             if (Bot.DiamondMap.containsKey(enemy.getKey())) {
                 int cost = getDistance(x, enemy.getKey());
                 if (
-                        Bot.DiamondMap.get(enemy.getKey()) != null && Bot.DiamondMap.get(enemyPos) != null &&
-                                (Bot.DiamondMap.get(enemy.getKey()).points() > Bot.DiamondMap.get(enemyPos).points() ||
-                  (Bot.DiamondMap.get(enemy.getKey()).points() == Bot.DiamondMap.get(enemyPos).points() && cost < distance))
+                        cost < distance
+                                || (cost == distance && Bot.DiamondMap.get(enemy.getKey()).points() > Bot.DiamondMap.get(enemyPos).points())
                 ) {
                     enemyPos = enemy.getKey();
                     distance = cost;
@@ -180,7 +179,7 @@ public class Utils {
     public static Position isMenacer(Position x, int nb_tour) {
         if(nb_tour == 5)
         {
-            nb_tour = 3;
+            nb_tour = 0;
         }
 
         for (Position enemyPos : Bot.EnemyMap.keySet())
@@ -315,73 +314,6 @@ public class Utils {
         return nearDiamondPos;
     }
 
-    public static boolean checkBlockingSpawnPosition(Position possiblePosition) {
-        boolean isNotWallX = true;
-        boolean isNotWallY = true;
-        Position nextPosition;
-        int posY = 0;
-        int posX = 0;
-
-        // Position au coin a gauche
-        if(possiblePosition.y() > 0) {
-            for(int i = possiblePosition.y(); isNotWallY; i--) {
-                nextPosition = new Position(possiblePosition.x(), i);
-                if (Bot.wallTiles.contains(nextPosition)) {
-                    posY = i;
-                    isNotWallY = false;
-                }
-            }
-        }
-
-        if(possiblePosition.x() > 0) {
-            for(int i = possiblePosition.x(); isNotWallX; i--) {
-                nextPosition = new Position(i, possiblePosition.y());
-                if (Bot.wallTiles.contains(nextPosition)) {
-                    posX = i;
-                    isNotWallX = false;
-                }
-            }
-        }
-
-        isNotWallX = true;
-        isNotWallY = true;
-
-        for (int i = posY; isNotWallY; i++) { // en bas
-            for (int j = posX; isNotWallX; j++) { // droite
-                nextPosition = new Position(possiblePosition.x(), j);
-                if (Bot.wallTiles.contains(nextPosition)) {
-                    if(Bot.blankTile.contains(new Position(possiblePosition.x(), j + 1)) &&
-                            Bot.blankTile.contains(new Position(possiblePosition.x(), j - 1)))
-                    {
-                        return true;
-                    }
-                    if(Bot.blankTile.contains(new Position(possiblePosition.x() + 1, j)) &&
-                            Bot.blankTile.contains(new Position(possiblePosition.x() - 1, j)))
-                    {
-                        return true;
-                    }
-                }
-            }
-            nextPosition = new Position(i, possiblePosition.y());
-            if (Bot.wallTiles.contains(nextPosition)) {
-                if (Bot.wallTiles.contains(nextPosition)) {
-                    if(Bot.blankTile.contains(new Position( i + 1, possiblePosition.y())) &&
-                            Bot.blankTile.contains(new Position( i - 1, possiblePosition.y())))
-                    {
-                        return true;
-                    }
-                    if(Bot.blankTile.contains(new Position(i, possiblePosition.y() + 1)) &&
-                            Bot.blankTile.contains(new Position(i, possiblePosition.y() - 1)))
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
     public static ArrayList<Position> findNearestSpawn() {
         Map<Position, Boolean> removedDiamonds = new HashMap<>();
         ArrayList<Position> usedSpawn = new ArrayList<>(Bot.EnemyMap.keySet());
@@ -438,26 +370,22 @@ public class Utils {
         Position south = new Position(playerPosition.x(), playerPosition.y()+1);
         Position east = new Position(playerPosition.x()+1, playerPosition.y());
         Position west = new Position(playerPosition.x()-1, playerPosition.y());
-        if (!Bot.wallTiles.contains(north) && !Bot.spawnTiles.contains(north) && !Bot.EnemyMap.containsKey(north)
-                && !Bot.PlayerMap.containsValue(north)
+        if (!Bot.wallTiles.contains(north) && !Bot.wallTiles.contains(north) && !Bot.EnemyMap.containsKey(north)
                 && north.x() >= 0 && north.x() < Bot.m_message.map().horizontalSize() &&
                 north.y() >= 0 && north.y() < Bot.m_message.map().verticalSize())
         {
             return north;
-        } else if (!Bot.wallTiles.contains(south) && !Bot.spawnTiles.contains(south) && !Bot.EnemyMap.containsKey(south)
-                && !Bot.PlayerMap.containsValue(south)
+        } else if (!Bot.wallTiles.contains(south) && !Bot.wallTiles.contains(south) && !Bot.EnemyMap.containsKey(south)
                 && south.x() >= 0 && south.x() < Bot.m_message.map().horizontalSize() &&
                 south.y() >= 0 && south.y() < Bot.m_message.map().verticalSize())
         {
             return south;
-        } else if (!Bot.wallTiles.contains(east) && !Bot.spawnTiles.contains(east) && !Bot.EnemyMap.containsKey(east)
-                && !Bot.PlayerMap.containsValue(east)
+        } else if (!Bot.wallTiles.contains(east) && !Bot.wallTiles.contains(east) && !Bot.EnemyMap.containsKey(east)
                 && east.x() >= 0 && east.x() < Bot.m_message.map().horizontalSize() &&
                 east.y() >= 0 && east.y() < Bot.m_message.map().verticalSize())
         {
             return east;
-        } else if (!Bot.wallTiles.contains(west) && !Bot.spawnTiles.contains(west) && !Bot.EnemyMap.containsKey(west)
-                && !Bot.PlayerMap.containsValue(west)
+        } else if (!Bot.wallTiles.contains(west) && !Bot.wallTiles.contains(west) && !Bot.EnemyMap.containsKey(west)
                 && west.x() >= 0 && west.x() < Bot.m_message.map().horizontalSize() &&
                 west.y() >= 0 && west.y() < Bot.m_message.map().verticalSize())
         {
@@ -486,35 +414,5 @@ public class Utils {
             return false;
         }
         return true;
-    }
-
-    public static Position goToSide(Position currPosition)
-    {
-        if (Math.abs(currPosition.x()-Bot.m_message.map().horizontalSize()) < Math.abs(currPosition.y()-Bot.m_message.map().verticalSize()))
-        {
-            if (currPosition.x() < Bot.m_message.map().horizontalSize()-currPosition.x())
-            {
-                int x = 0;
-                return new Position(x, currPosition.y());
-            }
-            else
-            {
-                int x = Bot.m_message.map().horizontalSize()-1;
-                return new Position(x, currPosition.y());
-            }
-        } else {
-            {
-                if (currPosition.y() < Bot.m_message.map().verticalSize()-currPosition.y())
-                {
-                    int y = 0;
-                    return new Position(currPosition.x(), y);
-                }
-                else
-                {
-                    int y = Bot.m_message.map().verticalSize()-1;
-                    return new Position(currPosition.x(), y);
-                }
-            }
-        }
     }
 }
