@@ -398,7 +398,7 @@ public class Utils {
     }
 
     /**
-     * 
+     *
      * @param target
      * @param currPosition
      * @return
@@ -414,5 +414,31 @@ public class Utils {
             return false;
         }
         return true;
+    }
+
+    public static Position goToSide(Position currPosition)
+    {
+        if (Math.abs(currPosition.x()-Bot.m_message.map().horizontalSize()) < Math.abs(currPosition.y()-Bot.m_message.map().verticalSize()))
+        {
+            if (currPosition.x() < Bot.m_message.map().horizontalSize()-currPosition.x())
+            {
+                return new Position(0, currPosition.y());
+            }
+            else
+            {
+                return new Position(Bot.m_message.map().horizontalSize()-1, currPosition.y());
+            }
+        } else {
+            {
+                if (currPosition.y() < Bot.m_message.map().verticalSize()-currPosition.y())
+                {
+                    return new Position(currPosition.x(), 0);
+                }
+                else
+                {
+                    return new Position(currPosition.x(), Bot.m_message.map().verticalSize()-1);
+                }
+            }
+        }
     }
 }
