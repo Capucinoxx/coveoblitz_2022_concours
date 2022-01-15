@@ -396,6 +396,13 @@ public class Utils {
             return null;
         }
     }
+
+    /**
+     * 
+     * @param target
+     * @param currPosition
+     * @return
+     */
     public static boolean isMovable(Position target, Position currPosition)
     {
         if(Bot.EnemyMap.keySet().contains(target) || Bot.wallTiles.contains(target) ||
