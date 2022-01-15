@@ -60,6 +60,9 @@ public class Bot
 
         for (Unit currUnit : remainingUnits)
         {
+            int idInt = Integer.parseInt(currUnit.id()) - 1;
+            idInt %= remainingUnits.size();
+
             UnitAction tempStream = new UnitAction(UnitActionType.MOVE,
                     currUnit.id(),
                     getRandomPosition(map));
@@ -91,24 +94,41 @@ public class Bot
             }
             ArrayList<Position> nearestDiamonds = Utils.findNearestDiamonds();
             Position enemyDiamondPos = Utils.findEnemyPlayerWithDiamond(currUnit.position());
-            if(!currUnit.hasDiamond() && enemyDiamondPos != null && Utils.getDistance(currUnit.position(), enemyDiamondPos) == 1 && !spawnTiles.contains(currUnit.position())) {
+            if(!currUnit.hasDiamond() && enemyDiamondPos != null && Utils.getDistance(currUnit.position(), enemyDiamondPos) == 1
+                    && !spawnTiles.contains(currUnit.position()))
+            {
                 tempStream = new UnitAction(UnitActionType.ATTACK, currUnit.id(), enemyDiamondPos);
             }
-            else if ((!currUnit.hasDiamond() && nearestDiamonds.size() > Integer.parseInt(currUnit.id())-1) ||
-                    (!currUnit.hasDiamond() && enemyDiamondPos != null && Utils.getDistance(currUnit.position(), enemyDiamondPos) > 1)) {
+            else if (!currUnit.hasDiamond() && (enemyDiamondPos != null || nearestDiamonds.size() >= idInt))
+            {
+                int nearDiamondDistance = -1;
+                int nearEnemyDistance = -1;
+                try
+                {
+                    nearDiamondDistance = Utils.getDistance(nearestDiamonds.get(idInt), currUnit.position());
+                }catch (Exception ignored)
+                {
 
-                if(enemyDiamondPos != null && (nearestDiamonds.size() <= Integer.parseInt(currUnit.id()) - 1 || Utils.getDistance(nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1), currUnit.position()) >
-                        Utils.getDistance(Utils.whereToDrop(enemyDiamondPos), currUnit.position())))
+                }
+                try
+                {
+                    nearEnemyDistance = Utils.getDistance(Utils.whereToDrop(enemyDiamondPos), currUnit.position());
+                }catch (Exception ignored)
+                {
+
+                }
+
+                if(nearEnemyDistance >= nearDiamondDistance && nearEnemyDistance != -1)
                 {
                     tempStream = new UnitAction(UnitActionType.MOVE,
                         currUnit.id(),
                         Utils.whereToDrop(enemyDiamondPos));
                 }
-                else
+                else if(nearDiamondDistance != -1)
                 {
                     tempStream = new UnitAction(UnitActionType.MOVE,
                             currUnit.id(),
-                            nearestDiamonds.get(Integer.parseInt(currUnit.id()) - 1));
+                            nearestDiamonds.get(idInt));
                 }
                 allActions.add(tempStream);
                 continue;
