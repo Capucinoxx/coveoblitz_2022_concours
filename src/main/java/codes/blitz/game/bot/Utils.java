@@ -1,12 +1,10 @@
 package codes.blitz.game.bot;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import codes.blitz.game.message.exception.PositionOutOfMapException;
 import codes.blitz.game.message.game.*;
+import org.glassfish.grizzly.utils.Pair;
 
 public class Utils {
 
@@ -317,10 +315,15 @@ public class Utils {
     public static ArrayList<Position> findNearestSpawn() {
         Map<Position, Boolean> removedDiamonds = new HashMap<>();
         ArrayList<Position> usedSpawn = new ArrayList<>(Bot.EnemyMap.keySet());
-        usedSpawn.addAll(Bot.PlayerMap.values());
+        Bot.PlayerMap.values().forEach((value)->{
+            if(value != null)
+            {
+                usedSpawn.add(value);
+            }
+        });
 
-
-        ArrayList<Position> spawnPos = new ArrayList<>();
+        ArrayList<Pair<Position, Integer>> spawnPos = new ArrayList<>();
+      //  ArrayList<Position> spawnPos = new ArrayList<>();
 
         int bestCost = 100000;
         Position bestPos = new Position(0, 0);
@@ -337,14 +340,28 @@ public class Utils {
                     diamondtoRemovePos = dPos;
                 }
             }
-            if(Bot.spawnTiles.contains(bestPos) && !checkBlockingSpawnPosition(bestPos))
+            if(Bot.spawnTiles.contains(bestPos) /*&& !checkBlockingSpawnPosition(bestPos)*/)
             {
-                spawnPos.add(bestPos);
+                spawnPos.add(new Pair<Position, Integer>(bestPos, bestCost));
                 usedSpawn.add(tileToRemovePos);
                 removedDiamonds.put(diamondtoRemovePos, true);
+                bestCost = 100000;
+                bestPos = new Position(0, 0);
             }
         }
-        return spawnPos;
+        spawnPos.sort((o1, o2) -> {
+            if(o1.getSecond() < o2.getSecond())
+                return -1;
+            else if(Objects.equals(o1.getSecond(), o2.getSecond()))
+                return 0;
+                else
+                    return 1;
+        });
+        ArrayList<Position> pos = new ArrayList<>();
+        spawnPos.forEach(positions->{
+            pos.add(positions.getFirst());
+        });
+        return pos;
     }
 
     public static Position chaseEnemy(String id) {

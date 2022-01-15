@@ -40,12 +40,14 @@ public class Bot
         Utils.createUnitMap();
         Utils.createPlayerMap();
         Utils.findPlayers();
-        if (gameMessage.tick() == 1)
+
+        ArrayList<Position> spawnPos = new ArrayList<>();
+        if (gameMessage.tick() == 0)
         {
             try {
                 Utils.SortTile();
             } catch (PositionOutOfMapException e) {
-
+                System.out.println("didnt sort");
             }
         }
 
@@ -63,12 +65,19 @@ public class Bot
                     getRandomPosition(map));
 
             if(!currUnit.hasSpawned()){
+                if(spawnPos.isEmpty())
+                {
+                    System.out.println(spawnPos);
+                    spawnPos = Utils.findNearestSpawn();
+                }
+                System.out.println(spawnPos);
                 try{
                     tempStream = new UnitAction(UnitActionType.SPAWN,
                             currUnit.id(),
-                            Utils.findNearestSpawn().get(Integer.parseInt(currUnit.id()) - 1));
+                            spawnPos.get(Integer.parseInt(currUnit.id()) - 1));
                     allActions.add(tempStream);
                 } catch (IndexOutOfBoundsException e) {
+                    System.out.println("RANDOM  SPAWN");
                     tempStream = new UnitAction(UnitActionType.SPAWN,
                             currUnit.id(),
                             findRandomSpawn(map));
