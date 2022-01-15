@@ -1,7 +1,6 @@
 package codes.blitz.game.bot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,26 +11,13 @@ public class Utils {
 
     public static GameMessage m_message;
     public static Map<Position, Integer> DiamondMap;
-    public static Map<Position, Boolean> UnitMap;
     public static ArrayList<Position> spawnTiles = new ArrayList<Position>();
     public static ArrayList<Position> wallTiles = new ArrayList<Position>();
     public static ArrayList<Position> blankTile = new ArrayList<Position>();
 
-    public static void createUnitMap() {
-        UnitMap = new HashMap<>();
 
-        Map<String, Team> teamsMapID = m_message.teamsMapById();
-        // retrait de notre équipe
-        teamsMapID.remove(m_message.teamId());
-
-
-        teamsMapID.forEach((s, team) -> { team.units().forEach((unit) -> UnitMap.put(unit.position(), true)); });
-
-    }
-
-    public static void createDiamondMap() {
-        DiamondMap = new HashMap<>();
-
+    public static void CreateDiamondMap()
+    {
         m_message.map().diamonds().forEach((diamond) -> {
             DiamondMap.put(diamond.position(), diamond.points());
         });
@@ -42,23 +28,20 @@ public class Utils {
         m_message = message;
     }
 
-    public ArrayList<Position> findHeldDiamond() {
+    public void findHeldDiamond() {
+        List<Position> unitsPosition = findUnitsPosition();
         ArrayList<Position> hDiamonds = new ArrayList<>();
-
         DiamondMap.forEach((pos, val) -> {
             if (val > 0) {
-                if (UnitMap.containsKey(pos)) {
-                    hDiamonds.add(pos);
+                for (Position p : unitsPosition) {
+                    if (p == pos) {
+                        hDiamonds.add(pos);
+                    }
                 }
             }
         });
-
-        return hDiamonds;
     }
 
-    /**
-     * @deprecated
-     */
     public List<Position> findUnitsPosition() {
         List<Position> positions = new ArrayList<>();
 
@@ -85,7 +68,7 @@ public class Utils {
         return positions;
     }
 
-    public List<Position> findAllyPosition() {
+    public static List<Position> findAllyPosition() {
         List<Position> positions = new ArrayList<>();
 
         m_message.teamsMapById().get(m_message.teamId()).units().forEach((unit) -> {
@@ -94,7 +77,7 @@ public class Utils {
         return positions;
     }
 
-    public int getDistance(Position a, Position b) {
+    public static int getDistance(Position a, Position b) {
         return Math.abs(a.x() - b.x()) + Math.abs(a.y() - b.y());
     }
 
@@ -120,27 +103,51 @@ public class Utils {
     public Position findNearestPlayer(Position x) {
         List<Position> players = this.findPlayersPosition();
         Position best = players.get(0);
-        int cost = this.getDistance(x, best);
+        int cost = getDistance(x, best);
 
         for (int i = 1; i < players.size(); i++) {
-            int intermediate_cost = this.getDistance(x, players.get(i));
+            int intermediate_cost = getDistance(x, players.get(i));
             if (intermediate_cost < cost) {
                 cost = intermediate_cost;
                 best = players.get(i);
             }
         }
-
         return best;
     }
 
-    public boolean isMenacer(Position x) {
-        for (int i = 0; i < Bot.taha_fait_vraiment_chier; i++) {
-            for (int j = 0; j < Bot.taha_fait_vraiment_chier; j++) {
-                if (UnitMap.containsKey(new Position(x.x() + i, x.y() + j))) {
-                    return true;
+    public static Position findNearestSpawn()
+    {
+        int bestCost = 100000;
+        Position bestPos = new Position(0, 0);
+        for (Position p: spawnTiles) {
+            for (Position dpos:DiamondMap.keySet()) {
+                int cost = getDistance(p, dpos);
+                if(cost < bestCost)
+                {
+                    bestCost = cost;
+                    bestPos = p;
                 }
             }
         }
-        return false;
+        return bestPos;
+    }
+
+    public static ArrayList<Position> findNearestDiamonds()
+    {
+        ArrayList<Position> nearDiamondPos = new ArrayList<Position>();
+        List<Position> allyPos = findAllyPosition();
+        for (Position p : allyPos) {
+            int bestCost = 100000;
+            Position bestPos = new Position(0, 0);
+            for (Position dpos : DiamondMap.keySet()) {
+                int cost = getDistance(p, dpos);
+                if (cost < bestCost) {
+                    bestCost = cost;
+                    bestPos = p;
+                }
+                nearDiamondPos.add(bestPos);
+            }
+        }
+        return nearDiamondPos;
     }
 }
