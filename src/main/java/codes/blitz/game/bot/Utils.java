@@ -68,7 +68,7 @@ public class Utils {
         return positions;
     }
 
-    public List<Position> findAllyPosition() {
+    public static List<Position> findAllyPosition() {
         List<Position> positions = new ArrayList<>();
 
         m_message.teamsMapById().get(m_message.teamId()).units().forEach((unit) -> {
@@ -130,5 +130,25 @@ public class Utils {
             }
         }
         return bestPos;
+    }
+
+    public static ArrayList<Position> findNearestDiamonds()
+    {
+        ArrayList<Position> nearDiamondPos = new ArrayList<Position>();
+        List<Position> allyPos = findAllyPosition();
+        for (Position p : allyPos) {
+            int bestCost = 100000;
+            Position bestPos = new Position(0, 0);
+            for (Position dpos : DiamondMap.keySet()) {
+                int cost = getDistance(p, dpos);
+                if (cost < bestCost) {
+                    bestCost = cost;
+                    bestPos = p;
+                }
+                nearDiamondPos.add(bestPos);
+            }
+
+        }
+        return nearDiamondPos;
     }
 }
