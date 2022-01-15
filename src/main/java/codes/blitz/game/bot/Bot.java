@@ -85,8 +85,8 @@ public class Bot
                 }
                 continue;
             }
-
-            List<Position> nearestDiamonds = Utils.findNearestDiamonds();
+            Map<String, Position> mapNearestDiamond;
+            ArrayList<Position> nearestDiamonds = Utils.findNearestDiamonds();
             if (!currUnit.hasDiamond() && !(nearestDiamonds.size() <= Integer.parseInt(currUnit.id())-1)) {
                 tempStream = new UnitAction(UnitActionType.MOVE,
                         currUnit.id(),
@@ -157,43 +157,6 @@ public class Bot
             allActions.add(tempStream);
         }
         return allActions;
-//        var deadUnitsActions = myTeam.units()
-//                .stream()
-//                .filter(unit -> !unit.hasSpawned())
-//                .map(unit -> new UnitAction(UnitActionType.SPAWN,
-//                        unit.id(),
-//                        findRandomSpawn(map)));
-//
-//        var aliveUnitsActions = myTeam.units()
-//                .stream()
-//                .filter(unit -> unit.hasSpawned() && !unit.hasDiamond())
-//                .map(unit -> new UnitAction(UnitActionType.MOVE,
-//                        unit.id(),
-//                        Utils.findNearestDiamonds().get(Integer.parseInt(unit.id())-1)
-//                ));
-//
-//        var hasDiamondSafeActions = myTeam.units().stream().filter(unit -> unit.hasDiamond() &&
-//                        gameMessage.tick() != gameMessage.totalTick()-1)
-//                .map(unit -> new UnitAction(UnitActionType.SUMMON,
-//                        unit.id(),
-//                        unit.position()));
-//
-//        var hasDiamondActions = myTeam.units().stream().filter(unit -> unit.hasDiamond() &&
-//                        Utils.isMenacer(unit.position()))
-//                .map(unit -> new UnitAction(UnitActionType.DROP,
-//                        unit.id(),
-//                        getRandomPosition(map)));
-//
-//        var lastTurnActions = myTeam.units().stream().filter(unit -> unit.hasDiamond() &&
-//                        gameMessage.tick() == gameMessage.totalTick()-1)
-//                .map(unit -> new UnitAction(UnitActionType.DROP,
-//                        unit.id(),
-//                        getRandomPosition(map)));
-//
-//        var actions = Stream.concat(deadUnitsActions, hasDiamondActions);
-//        actions = Stream.concat(actions, lastTurnActions);
-//        actions = Stream.concat(actions, hasDiamondSafeActions);
-//        return Stream.concat(actions, aliveUnitsActions).toList();
     }
 
     private Position findRandomSpawn(GameMap map)
