@@ -193,7 +193,7 @@ public class Utils {
         return false;
     }
 
-    public boolean positionInList(Position position, List<Position> positions) {
+    public static boolean positionInList(Position position, List<Position> positions) {
         for (Position pos : positions) {
             if (position.x() == pos.x() && position.y() == pos.y()) {
                 return true;
@@ -202,14 +202,20 @@ public class Utils {
         return false;
     }
 
-    public void canVine(Position playerPosition) {
+    public Position canVine(Unit playerUnit) throws PositionOutOfMapException {
+        Position playerPosition = playerUnit.position();
         // Check if not in a spawn tile
         if (!positionInList(playerPosition, spawnTiles)) {
-
+            SortTile();
+            List<Position> positions = findPlayersToVine(playerPosition);
+            if(positions.isEmpty() || playerUnit.hasDiamond()) return null;
+            return positions.get(0); // À CHANGER SELON NOTRE STRATÉGIE
         }
+
+        return null;
     }
 
-    public List<Position> checkSameLine(Position playerPosition) {
+    public List<Position> findPlayersToVine(Position playerPosition) {
         List<Position> playersPosition = findPlayersPosition();
         List<Position> positions = new ArrayList<>();
 
@@ -242,7 +248,7 @@ public class Utils {
         return positions;
     }
 
-    public static Boolean findIfEnemyAdjacent(String id)
+    public Boolean findIfEnemyAdjacent(String id)
     {
         Boolean canAttack = false;
         Position pos = PlayerMap.get(id);
