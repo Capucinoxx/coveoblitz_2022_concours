@@ -177,12 +177,17 @@ public class Utils {
     }
 
     public static Position isMenacer(Position x, int nb_tour) {
-        for (int i = 0; i < nb_tour; i++) {
-            for (int j = 0; j < nb_tour; j++) {
-                Position pos = new Position(x.x() + i, x.y() + j);
-                if (Bot.EnemyMap.containsKey(pos)) {
-                    return pos;
-                }
+        if(nb_tour == 5)
+        {
+            nb_tour = 0;
+        }
+
+        for (Position enemyPos : Bot.EnemyMap.keySet())
+        {
+            if(enemyPos == null) continue;
+            if (getDistance(enemyPos, x) <= nb_tour+1)
+            {
+                return enemyPos;
             }
         }
         return null;
