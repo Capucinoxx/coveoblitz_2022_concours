@@ -113,9 +113,30 @@ public class Bot
             }
             else if (currUnit.hasDiamond() && Utils.isMenacer(currUnit.position(), Utils.getSummonLevel(currUnit.id())) != null)
             {
-                tempStream = new UnitAction(UnitActionType.DROP,
+                Position enemyPos = Utils.isMenacer(currUnit.position(), Utils.getSummonLevel(currUnit.id()));
+                if(Utils.getDistance(currUnit.position(), Objects.requireNonNull(enemyPos)) > 2 )
+                {
+                    Position whereGo = Utils.directionOfTarget(enemyPos, currUnit.position());
+                    Position tryMove = new Position(currUnit.position().x()+ whereGo.x(), currUnit.position().y()+ whereGo.y());
+                    if(Utils.isMovable(tryMove, currUnit.position()))
+                    {
+                        tempStream = new UnitAction(UnitActionType.MOVE,
                                 currUnit.id(),
-                        Utils.whereToDrop(currUnit.position()));
+                                Utils.whereToDrop(currUnit.position()));
+                    }
+                    else
+                    {
+                        tempStream = new UnitAction(UnitActionType.DROP,
+                                currUnit.id(),
+                                Utils.whereToDrop(currUnit.position()));
+                    }
+                }
+                else
+                {
+                    tempStream = new UnitAction(UnitActionType.DROP,
+                            currUnit.id(),
+                            Utils.whereToDrop(currUnit.position()));
+                }
             }
             else if (currUnit.hasDiamond() && Utils.getSummonLevel(currUnit.id()) != 5)
             {
