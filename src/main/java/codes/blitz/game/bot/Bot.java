@@ -97,7 +97,7 @@ public class Bot
             }
 
             Position enemyDiamondPos = Utils.findEnemyPlayerWithDiamond(currUnit.position());
-            if(!currUnit.hasDiamond() && enemyDiamondPos != null && Utils.getDistance(currUnit.position(), enemyDiamondPos) == 1) {
+            if(!currUnit.hasDiamond() && enemyDiamondPos != null && Utils.getDistance(currUnit.position(), enemyDiamondPos) == 1 && !spawnTiles.contains(currUnit.position())) {
                 tempStream = new UnitAction(UnitActionType.ATTACK, currUnit.id(), enemyDiamondPos);
             }
             else if(!currUnit.hasDiamond() && enemyDiamondPos != null) {
