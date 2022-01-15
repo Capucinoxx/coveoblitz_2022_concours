@@ -24,7 +24,7 @@ public class Utils {
     public static void createUnitMap() {
         UnitMap = new HashMap<>();
 
-        Map<String, Team> teamsMapID = m_message.teamsMapById();
+        Map<String, Team> teamsMapID = new HashMap<>(Map.copyOf(m_message.teamsMapById()));
         // retrait de notre équipe
         teamsMapID.remove(m_message.teamId());
 
@@ -35,7 +35,9 @@ public class Utils {
     }
 
     public static void createPlayerMap() {
+        PlayerMap = new HashMap<>();
 
+        System.out.println(m_message.teamsMapById());
         m_message.teamsMapById().get(m_message.teamId()).units().forEach((unit) -> {
             PlayerMap.put(unit.position(), unit.id());
         });
