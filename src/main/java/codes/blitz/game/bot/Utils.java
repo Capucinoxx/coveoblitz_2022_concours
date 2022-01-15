@@ -285,4 +285,31 @@ public class Utils {
 
         return nearDiamondPos;
     }
+
+    public static ArrayList<Position> findNearestSpawn() {
+        Map<Position, Boolean> removedDiamonds = new HashMap<>();
+        ArrayList<Position> usedSpawn = new ArrayList<>();
+        ArrayList<Position> spawnPos = new ArrayList<>();
+
+        int bestCost = 100000;
+        Position bestPos = new Position(0, 0);
+
+        Position diamondtoRemovePos = null;
+        Position tileToRemovePos = null;
+        for (Position dPos : DiamondMap.keySet()) {
+            for (Position pos : spawnTiles) {
+                int cost = getDistance(dPos, pos);
+                if (cost < bestCost && !removedDiamonds.containsKey(dPos) && !usedSpawn.contains(pos)) {
+                    bestCost = cost;
+                    bestPos = pos;
+                    tileToRemovePos = pos;
+                    diamondtoRemovePos = dPos;
+                }
+            }
+            usedSpawn.add(tileToRemovePos);
+            removedDiamonds.put(diamondtoRemovePos, true);
+            spawnPos.add(bestPos);
+        }
+        return spawnPos;
+    }
 }
