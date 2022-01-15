@@ -353,7 +353,7 @@ public class Utils {
                     diamondtoRemovePos = dPos;
                 }
             }
-            if(Bot.spawnTiles.contains(bestPos) /*&& !checkBlockingSpawnPosition(bestPos)*/)
+            if(Bot.spawnTiles.contains(bestPos) && !checkBlockingSpawnPosition(bestPos))
             {
                 spawnPos.add(new Pair<Position, Integer>(bestPos, bestCost));
                 usedSpawn.add(tileToRemovePos);
@@ -447,28 +447,44 @@ public class Utils {
         return true;
     }
 
+//    public static int leftPosition(int pos, boolean isY) {
+//        boolean isNotWall = true;
+//        Position nextPosition;
+//        int leftPos = pos;
+//        if(pos > 0) {
+//            for(int i = pos; isNotWall; i--) {
+//                nextPosition = (isY ? new Position(pos, i): new Position(i, pos));
+//                if (Bot.wallTiles.contains(nextPosition) || i < 0) {
+//                    leftPos = i;
+//                    isNotWall = false;
+//                }
+//            }
+//        }
+//        return leftPos;
+//    }
+
     public static boolean checkBlockingSpawnPosition(Position possiblePosition) {
         boolean isNotWallX = true;
         boolean isNotWallY = true;
         Position nextPosition;
-        int posY = 0;
-        int posX = 0;
+        int posY = possiblePosition.y();
+        int posX = possiblePosition.x();
 
         // Position au coin a gauche
-        if(possiblePosition.y() > 0) {
-            for(int i = possiblePosition.y(); isNotWallY; i--) {
+        if(posY > 0) {
+            for(int i = posY; isNotWallY; i--) {
                 nextPosition = new Position(possiblePosition.x(), i);
-                if (Bot.wallTiles.contains(nextPosition)) {
+                if (Bot.wallTiles.contains(nextPosition) || i <= 0) {
                     posY = i;
                     isNotWallY = false;
                 }
             }
         }
 
-        if(possiblePosition.x() > 0) {
-            for(int i = possiblePosition.x(); isNotWallX; i--) {
+        if(posX > 0) {
+            for(int i = posX; isNotWallX; i--) {
                 nextPosition = new Position(i, possiblePosition.y());
-                if (Bot.wallTiles.contains(nextPosition)) {
+                if (Bot.wallTiles.contains(nextPosition) || i <= 0) {
                     posX = i;
                     isNotWallX = false;
                 }
